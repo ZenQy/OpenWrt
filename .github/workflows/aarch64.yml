@@ -9,7 +9,7 @@ env:
   CONFIG_FILE: aarch64.config
   DIY_SH: diy.sh
   TZ: Asia/Shanghai
-  PACKAGED_OUTPUTPATH: /upload
+  UPLOAD: /upload
 
 jobs:
   build:
@@ -35,8 +35,8 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
         
-        sudo mkdir -p $PACKAGED_OUTPUTPATH
-        sudo chown $USER:$GROUPS $PACKAGED_OUTPUTPATH
+        sudo mkdir -p $UPLOAD
+        sudo chown $USER:$GROUPS $UPLOAD
 
         echo "tag_name=$(date +%Y%m%d)" >> $GITHUB_ENV
         echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")"  >> $GITHUB_ENV
@@ -74,7 +74,7 @@ jobs:
         
         make -j$(nproc) || make -j1 || make -j1 V=s
         
-        cp .config ${PACKAGED_OUTPUTPATH}/build.config 
+        cp .config ${UPLOAD}/build.config 
  
     - name: Package Armvirt as OpenWrt
       if: (!cancelled())
@@ -107,7 +107,7 @@ jobs:
              2. cd /mnt/mmcblk2p4
              3. gzip -d  *.img.gz
              4. openwrt-update-amlogic xxxx.img
-        artifacts:  ${{ env.PACKAGED_OUTPUTPATH }}/*
+        artifacts:  ${{ env.UPLOAD }}/build.config,${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
         
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
