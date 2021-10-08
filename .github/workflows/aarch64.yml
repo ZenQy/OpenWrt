@@ -93,7 +93,7 @@ jobs:
         name: ${{ env.DATE }} 🚀 / N1-Openwrt | 编译
         allowUpdates: true
         tag: ${{ env.tag_name }}
-        commit: master
+        commit: main
         token: ${{ secrets.RELEASES_TOKEN  }}
         body: |
           默认IP：192.168.1.5 默认密码： password
