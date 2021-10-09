@@ -33,10 +33,6 @@ git clone --depth=1 https://github.com/kuoruan/openwrt-v2ray
 
 popd
 
-# 删除冗余软件
-rm -rf package/lean/UnblockNeteaseMusic*
-rm -rf package/lean/luci-app-unblockmusic
-
 # 替换默认主题
 sed -i 's#luci-theme-bootstrap#luci-theme-argon#g' feeds/luci/collections/luci/Makefile
 sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
