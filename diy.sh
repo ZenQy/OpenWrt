@@ -28,8 +28,8 @@ git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
 rm -rf ../lean/luci-theme-argon
 
 # Add v2ray
-git clone --depth=1 -b v1.5.6-1 https://github.com/kuoruan/luci-app-v2ray
-git clone --depth=1 https://github.com/kuoruan/openwrt-v2ray
+# git clone --depth=1 -b v1.5.6-1 https://github.com/kuoruan/luci-app-v2ray
+# git clone --depth=1 https://github.com/kuoruan/openwrt-v2ray
 
 popd
 
