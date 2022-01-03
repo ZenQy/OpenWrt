@@ -17,7 +17,7 @@
 
  * User: root
  * Password: password
- * Default IP: 192.168.1.5
+ * Default IP: 10.0.0.5
 
 ------
 
