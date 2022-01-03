@@ -96,7 +96,7 @@ jobs:
         commit: main
         token: ${{ secrets.RELEASES_TOKEN  }}
         body: |
-          默认IP：192.168.1.5 默认密码： password
+          默认IP：10.0.0.5 默认密码： password
           全新刷入emmc方法：
              1. 固件刷入U盘。
              2. openwrt-install-amlogic
