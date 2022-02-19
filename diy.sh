@@ -22,25 +22,14 @@ pushd package/community
 # Add OpenClash
 git clone --depth=1 https://github.com/vernesong/OpenClash
 
-# Add luci-theme-argon
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
-rm -rf ../lean/luci-theme-argon
-
 # Add v2ray
 # git clone --depth=1 -b v1.5.6-1 https://github.com/kuoruan/luci-app-v2ray
 # git clone --depth=1 https://github.com/kuoruan/openwrt-v2ray
 
 popd
 
-# 删除
-rm -rf feeds/luci/applications/luci-app-unblockmusic
-rm -rf feeds/luci/applications/luci-app-vlmcsd
-rm -rf feeds/luci/applications/luci-app-vsftpd
-
 # 替换默认主题
 sed -i 's#luci-theme-bootstrap#luci-theme-argon#g' feeds/luci/collections/luci/Makefile
-sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
 
 # Openwrt version
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
