@@ -39,9 +39,9 @@ popd
 
 # 替换默认主题
 sed -i 's#luci-theme-bootstrap#luci-theme-argon#g' feeds/luci/collections/luci/Makefile
-ls feeds/themes
-rm -rf feeds/themes/luci-theme-argon
-ls feeds/themes
+ls feeds/luci/themes
+rm -rf feeds/themes
+ls feeds/luci/themes
 
 # Openwrt version
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
