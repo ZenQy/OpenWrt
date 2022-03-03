@@ -33,7 +33,7 @@ git clone --depth=1 https://github.com/yichya/openwrt-xray
 # git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
 
 # 主题
-git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
+git clone -b 18.06 --depth=1 https://github.com/jerrykuku/luci-theme-argon
 
 popd
 
