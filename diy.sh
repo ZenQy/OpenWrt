@@ -24,12 +24,13 @@ git clone --depth=1 https://github.com/vernesong/OpenClash
 
 # Add xray
 git clone --depth=1 https://github.com/yichya/luci-app-xray
+git clone --depth=1 https://github.com/yichya/openwrt-xray
 
 # Add HelloWorld
-git clone --depth=1 https://github.com/fw876/helloworld
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb
-git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
+# git clone --depth=1 https://github.com/fw876/helloworld
+# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+# git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb
+# git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
 
 # 主题
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
@@ -38,7 +39,9 @@ popd
 
 # 替换默认主题
 sed -i 's#luci-theme-bootstrap#luci-theme-argon#g' feeds/luci/collections/luci/Makefile
+ls feeds/themes
 rm -rf feeds/themes/luci-theme-argon
+ls feeds/themes
 
 # Openwrt version
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
