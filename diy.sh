@@ -40,7 +40,7 @@ popd
 # 替换默认主题
 sed -i 's#luci-theme-bootstrap#luci-theme-argon#g' feeds/luci/collections/luci/Makefile
 ls feeds/luci/themes
-rm -rf feeds/themes
+rm -rf feeds/luci/themes
 ls feeds/luci/themes
 
 # Openwrt version
