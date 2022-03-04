@@ -23,8 +23,8 @@ pushd package/community
 git clone --depth=1 https://github.com/vernesong/OpenClash
 
 # Add xray
-git clone --depth=1 https://github.com/yichya/luci-app-xray
-git clone --depth=1 https://github.com/yichya/openwrt-xray
+git clone --depth=1 https://github.com/honwen/luci-app-xray
+git clone --depth=1 https://github.com/honwen/openwrt-precompiled-feeds
 
 # Add HelloWorld
 # git clone --depth=1 https://github.com/fw876/helloworld
@@ -45,6 +45,7 @@ rm -rf feeds/luci/themes
 
 sed -i 's/luci-app-ssr-plus //g' include/target.mk
 sed -i 's/luci-app-unblockmusic //g' include/target.mk
+rm -rf feeds/packages/tree/master/net/shadowsocks-libev
 
 # Openwrt version
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
