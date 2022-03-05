@@ -20,17 +20,13 @@ mkdir package/community
 pushd package/community
 
 # Add OpenClash
-git clone --depth=1 https://github.com/vernesong/OpenClash
-
-# Add xray
-git clone --depth=1 https://github.com/honwen/luci-app-xray
-git clone --depth=1 https://github.com/honwen/openwrt-precompiled-feeds
+# git clone --depth=1 https://github.com/vernesong/OpenClash
 
 # Add HelloWorld
-# git clone --depth=1 https://github.com/fw876/helloworld
-# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-# git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb
-# git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
+git clone --depth=1 https://github.com/fw876/helloworld
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb
+git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
 
 # 主题
 git clone -b 18.06 --depth=1 https://github.com/jerrykuku/luci-theme-argon
@@ -42,10 +38,8 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/M
 rm -rf feeds/luci/themes
 
 # 删除部分DEFAULT_PACKAGES
-
 sed -i 's/luci-app-ssr-plus //g' include/target.mk
 sed -i 's/luci-app-unblockmusic //g' include/target.mk
-rm -rf feeds/packages/tree/master/net/shadowsocks-libev
 
 # Openwrt version
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
