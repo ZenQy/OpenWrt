@@ -22,12 +22,9 @@ pushd package/community
 # Add OpenClash
 # git clone --depth=1 https://github.com/vernesong/OpenClash
 
-# Add HelloWorld
-git clone --depth=1 https://github.com/fw876/helloworld
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb
-git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
+# Add v2raya
 git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
+git clone --depth=1 https://github.com/fw876/helloworld
 
 # 主题
 git clone -b 18.06 --depth=1 https://github.com/jerrykuku/luci-theme-argon
