@@ -20,11 +20,11 @@ mkdir package/community
 pushd package/community
 
 # Add OpenClash
-# git clone --depth=1 https://github.com/vernesong/OpenClash
+git clone --depth=1 https://github.com/vernesong/OpenClash
 
 # Add v2raya
 git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
-git clone --depth=1 https://github.com/liuran001/openwrt-packages
+git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
 
 # 主题
 git clone -b 18.06 --depth=1 https://github.com/jerrykuku/luci-theme-argon

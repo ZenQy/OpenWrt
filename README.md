@@ -34,7 +34,7 @@
   1. 上传 img 到/mnt/mmcblk2p4
   2. cd /mnt/mmcblk2p4
   3. gzip -d  *.img.gz
-  4. openwrt-update-amlogic xxxx.img
+  4. openwrt-update-amlogic openwrt_*.img
 
 ------
 
