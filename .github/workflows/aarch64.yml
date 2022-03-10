@@ -6,7 +6,7 @@ on:
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: aarch64.config
+  CONFIG_FILE: lede.config
   DIY_SH: diy.sh
   TZ: Asia/Shanghai
   UPLOAD: /upload
