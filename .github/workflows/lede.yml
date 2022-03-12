@@ -1,4 +1,4 @@
-name: Build Flippy OpenWrt Package
+name: Build Flippy Lede Package
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: lede.config
-  DIY_SH: diy.sh
+  DIY_SH: lede.sh
   TZ: Asia/Shanghai
   UPLOAD: /upload
 

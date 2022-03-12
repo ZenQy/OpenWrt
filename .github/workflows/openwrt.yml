@@ -7,7 +7,7 @@ env:
   REPO_URL: https://github.com/openwrt/openwrt
   REPO_BRANCH: openwrt-21.02
   CONFIG_FILE: openwrt.config
-  DIY_SH: diy.sh
+  DIY_SH: openwrt.sh
   TZ: Asia/Shanghai
   UPLOAD: /upload
 
