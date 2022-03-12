@@ -26,10 +26,13 @@ git clone --depth=1 https://github.com/vernesong/OpenClash
 # git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
 # git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
 
-# 主题
+# Add theme
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
+
+# Add netdata
+git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata
+
 popd
-rm -rf feeds/luci/themes/luci-theme-argon
 
 # 替换默认主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
