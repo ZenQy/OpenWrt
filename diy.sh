@@ -23,17 +23,17 @@ pushd package/community
 git clone --depth=1 https://github.com/vernesong/OpenClash
 
 # Add v2raya
-git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
-git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
+# git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
+# git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
 
 # 主题
 git clone -b 18.06 --depth=1 https://github.com/jerrykuku/luci-theme-argon
-
 popd
+rm -rf feeds/luci/themes/luci-theme-argon
 
 # 替换默认主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-rm -rf feeds/luci/themes
+
 
 # 删除部分DEFAULT_PACKAGES
 sed -i 's/luci-app-ssr-plus //g' include/target.mk
