@@ -22,9 +22,8 @@ pushd package/community
 # Add OpenClash
 git clone --depth=1 https://github.com/vernesong/OpenClash
 
-# Add v2raya
-# git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
-# git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
+# Add xray
+git clone --depth=1 https://github.com/yichya/luci-app-xray
 
 # Add theme
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
@@ -33,6 +32,3 @@ git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
 git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata
 
 popd
-
-# 替换默认主题
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
