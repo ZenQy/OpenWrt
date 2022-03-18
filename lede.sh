@@ -38,6 +38,13 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/M
 # 删除部分DEFAULT_PACKAGES
 sed -i 's/luci-app-ssr-plus //g' include/target.mk
 sed -i 's/luci-app-unblockmusic //g' include/target.mk
+sed -i 's/luci-app-ddns //g' include/target.mk
+sed -i 's/ddns-scripts_aliyun //g' include/target.mk
+sed -i 's/ddns-scripts_dnspod //g' include/target.mk
+sed -i 's/ppp-mod-pppoe //g' include/target.mk
+sed -i 's/ppp //g' include/target.mk
+sed -i '/rclone-ng/d' feeds/luci/applications/luci-app-rclone/Makefile
+sed -i "s/default y\nendef/endef/g" feeds/luci/applications/luci-app-rclone/Makefile
 
 # Openwrt version
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
