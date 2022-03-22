@@ -89,9 +89,9 @@ jobs:
       if: (!cancelled())
       uses: ncipollo/release-action@v1
       with:
-        name: ${{ env.DATE }} 🚀 / N1-Openwrt | 编译
+        name: ${{ env.DATE }} 🚀 / Lede | 编译
         allowUpdates: true
-        tag: ${{ env.tag_name }}
+        tag: ${{ env.tag_name }}_lede
         commit: main
         token: ${{ secrets.RELEASES_TOKEN  }}
         body: |
