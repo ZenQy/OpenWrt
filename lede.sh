@@ -2,9 +2,9 @@
 
 git config --global pull.ff only
 
-#################################################
-echo '开始更新主仓库'
-#################################################
+echo '#################################################'
+echo '##                 开始更新主仓库                 ##'
+echo '#################################################'
 if [[ -d "lede" ]]; then
   cd lede
   git checkout .
@@ -14,12 +14,13 @@ else
   cd lede
 fi
 
+# rm -rf feeds
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-#################################################
-echo '开始更新第三方仓库'
-#################################################
+echo '#################################################'
+echo '##               开始更新第三方仓库               ##'
+echo '#################################################'
 if [[ -d "package/community" ]]; then
   cd package/community
   dirs=$(ls -l | awk '/^d/ {print $NF}')
@@ -33,7 +34,7 @@ else
   mkdir package/community
   cd package/community
   # Add OpenClash
-  git clone --depth=1 https://github.com/vernesong/OpenClash
+  # git clone --depth=1 https://github.com/vernesong/OpenClash
   # Add v2raya
   git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
   git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
@@ -42,9 +43,9 @@ else
 fi
 cd ../../
 
-#################################################
-echo '开始自定义修改'
-#################################################
+echo '#################################################'
+echo '##                 开始自定义修改                 ##'
+echo '#################################################'
 # echo '修改机器名称'
 # sed -i 's/OpenWrt/Phicomm-N1/g' package/base-files/files/bin/config_generate
 
@@ -53,6 +54,9 @@ sed -i 's/192.168.1.1/10.0.0.11/g' package/base-files/files/bin/config_generate
 
 echo '修改时区'
 sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
+
+echo '增加部分翻译'
+echo -e '\nmsgid "NAS"\nmsgstr "存储"' >> feeds/luci/modules/luci-base/po/zh-cn/base.po
 
 echo '替换默认主题'
 rm -rf feeds/luci/themes/luci-theme-argon
@@ -76,20 +80,25 @@ echo "echo \"DISTRIB_REVISION='${version} $(TZ=UTC-8 date "+%Y.%m.%d") Compilde 
 sed -i '/exit 0/d' package/lean/default-settings/files/zzz-default-settings
 echo "exit 0" >> package/lean/default-settings/files/zzz-default-settings
 
-#################################################
 echo '拷贝配置文件'
 cp ../lede.config .config
 
-echo '开始下载dl库'
+echo '##################################################'
+echo '##                  开始下载dl库                  ##'
+echo '##################################################'
+
 make -j8 download V=s
 
-echo '开始编译固件'
+echo '##################################################'
+echo '##                  开始编译固件                  ##'
+echo '##################################################'
+
 make -j$(($(nproc) + 1)) V=s
 cd ../
 
-#################################################
-echo '开始搭建固件制作环境'
-#################################################
+echo '#################################################'
+echo '##              开始搭建固件制作环境              ##'
+echo '#################################################'
 if [[ -d "openwrt_packit" ]]; then
   cd openwrt_packit
   git checkout .
@@ -111,20 +120,36 @@ cd kernel
 [[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/breakings/OpenWrt/raw/main/opt/kernel/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar.gz"
 [[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/breakings/OpenWrt/raw/main/opt/kernel/${KERNEL_VERSION_SHORT}/dtb-amlogic-${KERNEL_VERSION}.tar.gz"
 
-#################################################
-echo '开始制作固件'
-#################################################
+echo '#################################################'
+echo '##                  开始制作固件                 ##'
+echo '#################################################'
 cd ../openwrt_packit
 sudo ./mk_s905d_n1.sh
 sudo ./mk_s905x3_multi.sh
 sudo chown -R zenqy:zenqy output
+rm openwrt-armvirt-64-default-rootfs.tar.gz
 cd output
 gzip -9 *.img
 cd ../../
 
+echo '#################################################'
+echo '##               开始将固件存放仓库               ##'
+echo '#################################################'
 [[ -d "repo" ]] || mkdir repo
 cd repo
 DIR=$(date +%F)
 [[ -d "$DIR" ]] || mkdir $DIR
 mv ../openwrt_packit/output/*.gz $DIR/
 mv ../lede/.config $DIR/build.config
+
+DIRS=$(ls)
+COUNT=$(ls | wc -l)
+for dir in $DIRS
+do  
+  [[ $COUNT > 5 ]] && rm -rf $dir
+  COUNT=$(($COUNT-1))
+done
+
+echo '#################################################'
+echo '##                   工作结束                   ##'
+echo '#################################################'
