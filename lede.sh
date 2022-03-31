@@ -1,6 +1,8 @@
 #!/bin/bash
 
 git config --global pull.ff only
+git config --global core.sparsecheckout true
+git config --global init.defaultBranch main
 
 echo '#################################################'
 echo '##                 开始更新主仓库                 ##'
@@ -34,10 +36,10 @@ else
   mkdir package/community
   cd package/community
   # Add OpenClash
-  # git clone --depth=1 https://github.com/vernesong/OpenClash
+  git clone --depth=1 https://github.com/vernesong/OpenClash
   # Add v2raya
-  git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
-  git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
+  # git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
+  # git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
   # 主题
   git clone -b 18.06 --depth=1 https://github.com/jerrykuku/luci-theme-argon
 fi
@@ -140,7 +142,7 @@ cd repo
 DIR=$(date +%F)
 [[ -d "$DIR" ]] || mkdir $DIR
 mv ../openwrt_packit/output/*.gz $DIR/
-mv ../lede/.config $DIR/build.config
+mv ../lede/.config $DIR/lede.config
 
 DIRS=$(ls)
 COUNT=$(ls | wc -l)
