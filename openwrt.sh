@@ -40,6 +40,7 @@ else
   cd package/community
   # Add repos
   git clone --depth=1 https://github.com/kiddin9/openwrt-packages
+
 fi
 cd ../../
 
