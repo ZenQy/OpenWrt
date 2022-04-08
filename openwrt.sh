@@ -1,9 +1,5 @@
 #!/bin/bash
 
-git config --global pull.ff only
-git config --global core.sparsecheckout true
-git config --global init.defaultBranch main
-
 echo '#################################################'
 echo '##                 开始更新主仓库                 ##'
 echo '#################################################'
@@ -12,16 +8,13 @@ if [[ -d "openwrt" ]]; then
   git checkout .
   git pull
 else
-  git clone --depth=1 https://github.com/openwrt/openwrt
+  git clone --depth=1 https://github.com/coolsnowwolf/lede openwrt
   cd openwrt
 fi
 
 echo '#################################################'
 echo '##               开始更新第三方仓库               ##'
 echo '#################################################'
-
-# rm -rf feeds
-sed -i '/packages.git/d' feeds.conf.default
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
@@ -39,29 +32,46 @@ else
   mkdir package/community
   cd package/community
   # Add repos
-  git clone --depth=1 https://github.com/kiddin9/openwrt-packages
-
+  git clone --depth=1 https://github.com/kenzok8/openwrt-packages
 fi
 cd ../../
 
 echo '#################################################'
 echo '##                 开始自定义修改                 ##'
 echo '#################################################'
+
 # echo '修改机器名称'
 # sed -i 's/OpenWrt/Phicomm-N1/g' package/base-files/files/bin/config_generate
 
-# Modify default IP
+echo '修改默认IP'
 sed -i 's/192.168.1.1/10.0.0.11/g' package/base-files/files/bin/config_generate
 
 echo '修改时区'
 sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 
-# echo '增加部分翻译'
-# echo -e '\nmsgid "NAS"\nmsgstr "存储"' >> feeds/luci/modules/luci-base/po/zh_Hans/base.po
+echo '增加部分翻译'
+echo -e '\nmsgid "NAS"\nmsgstr "存储"' >> feeds/luci/modules/luci-base/po/zh-cn/base.po
 
 echo '替换默认主题'
-rm -rf feeds/luci/themes/luci-theme-argon
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-neobird/g' feeds/luci/collections/luci/Makefile
+
+echo '删除部分DEFAULT_PACKAGES'
+sed -i 's/luci-app-ssr-plus //g' include/target.mk
+sed -i 's/luci-app-unblockmusic //g' include/target.mk
+sed -i 's/luci-app-ddns //g' include/target.mk
+sed -i 's/ddns-scripts_aliyun //g' include/target.mk
+sed -i 's/ddns-scripts_dnspod //g' include/target.mk
+sed -i 's/ppp-mod-pppoe //g' include/target.mk
+sed -i 's/ppp //g' include/target.mk
+sed -i '/rclone-ng/d' feeds/luci/applications/luci-app-rclone/Makefile
+sed -i "s/default y\nendef/endef/g" feeds/luci/applications/luci-app-rclone/Makefile
+
+echo '修改打包版本信息'
+version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
+sed -i '/DISTRIB_REVISION/d' package/lean/default-settings/files/zzz-default-settings
+echo "echo \"DISTRIB_REVISION='${version} $(TZ=UTC-8 date "+%Y.%m.%d") Compilde by ZenQy'\" >> /etc/openwrt_release" >> package/lean/default-settings/files/zzz-default-settings
+sed -i '/exit 0/d' package/lean/default-settings/files/zzz-default-settings
+echo "exit 0" >> package/lean/default-settings/files/zzz-default-settings
 
 echo '拷贝配置文件'
 cp ../openwrt.config .config
@@ -123,7 +133,7 @@ cd repo
 DIR=$(date +%F)
 [[ -d "$DIR" ]] || mkdir $DIR
 mv ../openwrt_packit/output/*.gz $DIR/
-mv ../openwrt/.config $DIR/openwrt.config
+cp ../openwrt/.config $DIR/openwrt.config
 
 DIRS=$(ls)
 COUNT=$(ls | wc -l)

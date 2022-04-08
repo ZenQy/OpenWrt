@@ -5,11 +5,7 @@
 
 ## 如何使用
 
-1. fork项目
-2. 在secrets中创建`RELEASES_TOKEN`，一般一次编译要2~4小时，所以要创建一个github发布用的token
-3. 在secrets中创建`TELEGRAM_TO`和`TELEGRAM_TOKEN`，用户通知
-4. 点击Actions -> Workflows -> Run workflow -> Run workflow 
-5. Build Flippy OpenWrt Package 编译n1等盒子可用包
+因`github action`出现弱鸡CPU，改为在本地或云服务器上进行编译。
 
 ------
 
