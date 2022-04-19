@@ -16,9 +16,6 @@ echo '#################################################'
 echo '##               开始更新第三方仓库               ##'
 echo '#################################################'
 
-./scripts/feeds update -a
-./scripts/feeds install -a
-
 if [[ -d "package/community" ]]; then
   cd package/community
   dirs=$(ls -l | awk '/^d/ {print $NF}')
@@ -35,6 +32,8 @@ else
   git clone --depth=1 https://github.com/kenzok8/openwrt-packages
 fi
 cd ../../
+./scripts/feeds update -a
+./scripts/feeds install -a
 
 echo '#################################################'
 echo '##                 开始自定义修改                 ##'
@@ -86,6 +85,7 @@ echo '##################################################'
 echo '##                  开始编译固件                  ##'
 echo '##################################################'
 
+make defconfig
 make -j$(($(nproc) + 1)) V=s
 cd ../
 
