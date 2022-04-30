@@ -17,21 +17,24 @@ echo '##               开始更新第三方仓库               ##'
 echo '#################################################'
 
 if [[ -d "package/community" ]]; then
-  cd package/community
-  dirs=$(ls -l | awk '/^d/ {print $NF}')
-  for dir in $dirs; do
-    cd $dir
-    git checkout .
-    git pull
-    cd ../
-  done
-else
-  mkdir package/community
-  cd package/community
-  # Add repos
-  git clone --depth=1 https://github.com/kenzok8/openwrt-packages
+  rm -rf package/community
 fi
+
+mkdir package/community
+cd package/community
+# Add repos
+# git clone --depth=1 https://github.com/kenzok8/openwrt-packages
+git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
+svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+if [[ ! -f "../base-files/files/usr/share/openclash/core/clash" ]]; then
+  mkdir -p ../base-files/files/usr/share/openclash/core
+  wget https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/dev/clash-linux-armv8.tar.gz
+  tar -zxvf clash-linux-armv8.tar.gz -C ../base-files/files/usr/share/openclash/core
+  rm clash-linux-armv8.tar.gz
+fi
+
 cd ../../
+
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
@@ -68,7 +71,7 @@ sed -i "s/default y\nendef/endef/g" feeds/luci/applications/luci-app-rclone/Make
 echo '修改打包版本信息'
 version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
 sed -i '/DISTRIB_REVISION/d' package/lean/default-settings/files/zzz-default-settings
-echo "echo \"DISTRIB_REVISION='${version} $(TZ=UTC-8 date "+%Y.%m.%d") Compilde by ZenQy'\" >> /etc/openwrt_release" >> package/lean/default-settings/files/zzz-default-settings
+echo "echo \"DISTRIB_REVISION='${version} $(TZ=UTC-8 date "+%Y.%m.%d") Compilde by Zenith'\" >> /etc/openwrt_release" >> package/lean/default-settings/files/zzz-default-settings
 sed -i '/exit 0/d' package/lean/default-settings/files/zzz-default-settings
 echo "exit 0" >> package/lean/default-settings/files/zzz-default-settings
 
