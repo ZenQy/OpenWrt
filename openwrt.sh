@@ -26,13 +26,13 @@ cd package/community
 # git clone --depth=1 https://github.com/kenzok8/openwrt-packages
 git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
-if [[ ! -f "../base-files/files/usr/share/openclash/core/clash" ]]; then
-  mkdir -p ../base-files/files/usr/share/openclash/core
+if [[ ! -f "../base-files/files/etc/openclash/core/clash" ]]; then
+  mkdir -p ../base-files/files/etc/openclash/core
   wget https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/dev/clash-linux-armv8.tar.gz
-  tar -zxvf clash-linux-armv8.tar.gz -C ../base-files/files/usr/share/openclash/core
+  tar -zxvf clash-linux-armv8.tar.gz -C ../base-files/files/etc/openclash/core
   rm clash-linux-armv8.tar.gz
 fi
-
+git clone --depth=1 https://github.com/immortalwrt-collections/openwrt-gowebdav
 cd ../../
 
 ./scripts/feeds update -a
@@ -106,6 +106,8 @@ fi
 mv ../openwrt/bin/targets/armvirt/64/openwrt-armvirt-64-default-rootfs.tar.gz ./
 echo "WHOAMI=Zenith" > whoami
 echo "KERNEL_PKG_HOME=$HOME/kernel" >> whoami
+sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
+sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
 source make.env
 KERNEL_VERSION_SHORT=$(echo $KERNEL_VERSION | awk -F- '{print $1}')
 cd ../
