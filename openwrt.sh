@@ -28,15 +28,7 @@ cd package/community
 git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
 git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
 git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
-
 git clone --depth=1 https://github.com/sbwml/openwrt-alist
-# 修改Makefile，使用编译好的前端
-sed -i 's/$(PKG_NAME)-web-/assets-/g' openwrt-alist/alist/Makefile
-sed -i 's/alist-web/assets/g' openwrt-alist/alist/Makefile
-sed -i 's/8bd49960b6ec6af336e803f3e4fc341ab26247229c6ed583abc3b6de6847298d/00c0d13c945829ccad4822aee93563b26c6e304222e4d9aef3b41d7a52f90558/g' openwrt-alist/alist/Makefile
-sed -i 's/ node\/host node-yarn\/host//g' openwrt-alist/alist/Makefile
-sed -i '/yarn/d' openwrt-alist/alist/Makefile
-sed -i '/CURDIR/d' openwrt-alist/alist/Makefile
 
 cd ../../
 
