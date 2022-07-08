@@ -24,10 +24,10 @@ mkdir package/community
 cd package/community
 # Add repos
 # git clone --depth=1 https://github.com/kenzok8/openwrt-packages
-# svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
 git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
-git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
-git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
+# git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
+# git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
 git clone --depth=1 https://github.com/sbwml/openwrt-alist
 
 cd ../../
@@ -118,7 +118,7 @@ echo '#################################################'
 echo '##                  开始制作固件                 ##'
 echo '#################################################'
 cd ../openwrt_packit
-# sudo ./mk_s905d_n1.sh
+sudo ./mk_s905d_n1.sh
 sudo ./mk_s905x3_multi.sh
 sudo chown -R zenqy:zenqy output
 rm openwrt-armvirt-64-default-rootfs.tar.gz
