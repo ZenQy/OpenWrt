@@ -24,11 +24,31 @@ mkdir package/community
 cd package/community
 # Add repos
 # git clone --depth=1 https://github.com/kenzok8/openwrt-packages
+
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+wget https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-armv8.tar.gz
+tar -zxvf clash-linux-armv8.tar.gz
+rm clash-linux-armv8.tar.gz
+mkdir -p ../base-files/files/etc/openclash/core
+mv clash ../base-files/files/etc/openclash/core/clash_meta
+
 git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
+
 # git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
 # git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
+
 git clone --depth=1 https://github.com/sbwml/openwrt-alist
+sed -i 's/define Package\/$(PKG_NAME)\/postinst/define Package\/$(PKG_NAME)\/preinst\
+#!\/bin\/sh\
+if [ -z "$${IPKG_INSTROOT}" ]; then\
+	[ -f \/etc\/alist\/data.db ] \&\& mv \/etc\/alist\/data.db \/etc\/alist\/data.db.bak\
+fi\
+endef\
+define Package\/$(PKG_NAME)\/postinst/g' openwrt-alist/alist/Makefile
+
+sed -i 's/rm -f \/etc\/uci-defaults\/alist/rm -f \/etc\/uci-defaults\/alist\
+	[ -f \/etc\/alist\/data.db.bak ] \&\& mv \/etc\/alist\/data.db.bak \/etc\/alist\/data.db\
+/g' openwrt-alist/alist/Makefile
 
 cd ../../
 
@@ -36,6 +56,21 @@ echo '拷贝配置文件'
 cp ../openwrt.config .config
 
 export GOPROXY=https://goproxy.cn
+
+# 更新feeds
+
+cd feeds/luci
+git checkout .
+cd ../..
+cd feeds/packages
+git checkout .
+cd ../..
+cd feeds/routing
+git checkout .
+cd ../..
+cd feeds/telephony
+git checkout .
+cd ../..
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
@@ -99,6 +134,12 @@ else
   cd openwrt_packit
 fi
 mv ../openwrt/bin/targets/armvirt/64/openwrt-armvirt-64-default-rootfs.tar.gz ./
+# remove clash adjust
+sed -i '/openclash/d' mk_s905*.sh
+# remove AdguardHome init
+sed -i '/AdGuardHome\/data/d' files/first_run.sh
+sed -i '/bin\/AdGuardHome/d' files/first_run.sh
+
 sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
 sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
 source make.env
@@ -118,7 +159,7 @@ echo '#################################################'
 echo '##                  开始制作固件                 ##'
 echo '#################################################'
 cd ../openwrt_packit
-sudo ./mk_s905d_n1.sh
+# sudo ./mk_s905d_n1.sh
 sudo ./mk_s905x3_multi.sh
 sudo chown -R zenqy:zenqy output
 rm openwrt-armvirt-64-default-rootfs.tar.gz
