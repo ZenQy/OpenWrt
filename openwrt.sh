@@ -33,22 +33,12 @@ mkdir -p ../base-files/files/etc/openclash/core
 mv clash ../base-files/files/etc/openclash/core/clash_meta
 
 git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
+sed -i 's/shadowsocksr/openclash/g' luci-theme-neobird/luasrc/view/themes/neobird/header.htm
 
 # git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
 # git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
 
 git clone --depth=1 https://github.com/sbwml/openwrt-alist
-sed -i 's/define Package\/$(PKG_NAME)\/postinst/define Package\/$(PKG_NAME)\/preinst\
-#!\/bin\/sh\
-if [ -z "$${IPKG_INSTROOT}" ]; then\
-	[ -f \/etc\/alist\/data.db ] \&\& mv \/etc\/alist\/data.db \/etc\/alist\/data.db.bak\
-fi\
-endef\
-define Package\/$(PKG_NAME)\/postinst/g' openwrt-alist/alist/Makefile
-
-sed -i 's/rm -f \/etc\/uci-defaults\/alist/rm -f \/etc\/uci-defaults\/alist\
-	[ -f \/etc\/alist\/data.db.bak ] \&\& mv \/etc\/alist\/data.db.bak \/etc\/alist\/data.db\
-/g' openwrt-alist/alist/Makefile
 
 cd ../../
 
@@ -136,9 +126,14 @@ fi
 mv ../openwrt/bin/targets/armvirt/64/openwrt-armvirt-64-default-rootfs.tar.gz ./
 # remove clash adjust
 sed -i '/openclash/d' mk_s905*.sh
+# remove ss
+sed -i '/extract_glibc_programs/d' mk_s905*.sh
 # remove AdguardHome init
 sed -i '/AdGuardHome\/data/d' files/first_run.sh
 sed -i '/bin\/AdGuardHome/d' files/first_run.sh
+# add alist buckup
+sed -i 's/usr\/share\/openclash\/core/etc\/alist\/ \\\
+.\/root\/.config\/rclone/g' files/openwrt-backup
 
 sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
 sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
