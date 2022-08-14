@@ -154,7 +154,7 @@ echo '#################################################'
 echo '##                  开始制作固件                 ##'
 echo '#################################################'
 cd ../openwrt_packit
-# sudo ./mk_s905d_n1.sh
+sudo ./mk_s905d_n1.sh
 sudo ./mk_s905x3_multi.sh
 sudo chown -R zenqy:zenqy output
 rm openwrt-armvirt-64-default-rootfs.tar.gz
