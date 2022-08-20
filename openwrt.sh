@@ -31,6 +31,10 @@ tar -zxvf clash-linux-armv8.tar.gz
 rm clash-linux-armv8.tar.gz
 mkdir -p ../base-files/files/etc/openclash/core
 mv clash ../base-files/files/etc/openclash/core/clash_meta
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+mv geoip.dat ../base-files/files/etc/openclash/
+mv geosite.dat ../base-files/files/etc/openclash/
 
 git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
 sed -i 's/shadowsocksr/openclash/g' luci-theme-neobird/luasrc/view/themes/neobird/header.htm
@@ -51,14 +55,11 @@ export GOPROXY=https://goproxy.cn
 
 cd feeds/luci
 git checkout .
-cd ../..
-cd feeds/packages
+cd ../packages
 git checkout .
-cd ../..
-cd feeds/routing
+cd ../routing
 git checkout .
-cd ../..
-cd feeds/telephony
+cd ../telephony
 git checkout .
 cd ../..
 
@@ -146,9 +147,9 @@ echo "KERNEL_PKG_HOME=$PWD/kernel" >> openwrt_packit/whoami
 
 [[ -d "kernel" ]] || mkdir kernel
 cd kernel
-[[ -e "boot-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/breakings/OpenWrt/raw/main/opt/kernel/${KERNEL_VERSION_SHORT}/boot-${KERNEL_VERSION}.tar.gz"
-[[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/breakings/OpenWrt/raw/main/opt/kernel/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar.gz"
-[[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/breakings/OpenWrt/raw/main/opt/kernel/${KERNEL_VERSION_SHORT}/dtb-amlogic-${KERNEL_VERSION}.tar.gz"
+[[ -e "boot-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/${KERNEL_VERSION_SHORT}/boot-${KERNEL_VERSION}.tar.gz"
+[[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar.gz"
+[[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/${KERNEL_VERSION_SHORT}/dtb-amlogic-${KERNEL_VERSION}.tar.gz"
 
 echo '#################################################'
 echo '##                  开始制作固件                 ##'
