@@ -147,9 +147,9 @@ echo "KERNEL_PKG_HOME=$PWD/kernel" >> openwrt_packit/whoami
 
 [[ -d "kernel" ]] || mkdir kernel
 cd kernel
-[[ -e "boot-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/${KERNEL_VERSION_SHORT}/boot-${KERNEL_VERSION}.tar.gz"
-[[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar.gz"
-[[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/${KERNEL_VERSION_SHORT}/dtb-amlogic-${KERNEL_VERSION}.tar.gz"
+[[ -e "boot-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/boot-${KERNEL_VERSION}.tar.gz"
+[[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar.gz"
+[[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/dtb-amlogic-${KERNEL_VERSION}.tar.gz"
 
 echo '#################################################'
 echo '##                  开始制作固件                 ##'
