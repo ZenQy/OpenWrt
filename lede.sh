@@ -8,7 +8,7 @@ if [[ -d "openwrt" ]]; then
   git checkout .
   git pull
 else
-  git clone --depth=1 https://github.com/openwrt/openwrt openwrt
+  git clone --depth=1 https://github.com/coolsnowwolf/lede openwrt
   cd openwrt
 fi
 
@@ -23,10 +23,26 @@ fi
 mkdir package/community
 cd package/community
 # Add repos
+# git clone --depth=1 https://github.com/kenzok8/openwrt-packages
 
-git clone --depth=1 https://github.com/yichya/luci-app-xray
-git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
-#git clone --depth=1 https://github.com/sbwml/openwrt-alist
+svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
+wget https://raw.githubusercontent.com/vernesong/OpenClash/master/core-lateset/meta/clash-linux-armv8.tar.gz
+tar -zxvf clash-linux-armv8.tar.gz
+rm clash-linux-armv8.tar.gz
+mkdir -p ../base-files/files/etc/openclash/core
+mv clash ../base-files/files/etc/openclash/core/clash_meta
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+mv geoip.dat ../base-files/files/etc/openclash/
+mv geosite.dat ../base-files/files/etc/openclash/
+
+git clone --depth=1 https://github.com/thinktip/luci-theme-neobird
+sed -i 's/shadowsocksr/openclash/g' luci-theme-neobird/luasrc/view/themes/neobird/header.htm
+
+# git clone --depth=1 https://github.com/zxlhhyccc/luci-app-v2raya
+# git clone --depth=1 https://github.com/v2rayA/v2raya-openwrt
+
+git clone --depth=1 https://github.com/sbwml/openwrt-alist
 
 cd ../../
 
@@ -63,18 +79,25 @@ sed -i 's/192.168.1.1/10.0.0.11/g' package/base-files/files/bin/config_generate
 echo '修改时区'
 sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 
-# echo '增加部分翻译'
-# echo -e '\nmsgid "NAS"\nmsgstr "存储"' >> feeds/luci/modules/luci-base/po/zh-cn/base.po
+echo '增加部分翻译'
+echo -e '\nmsgid "NAS"\nmsgstr "存储"' >> feeds/luci/modules/luci-base/po/zh-cn/base.po
 
 echo '替换默认主题'
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-neobird/g' feeds/luci/collections/luci/Makefile
 
-# echo '删除部分DEFAULT_PACKAGES'
-# sed -i 's/luci-app-ssr-plus //g' include/target.mk
-# sed -i 's/luci-app-unblockmusic //g' include/target.mk
-# sed -i 's/luci-app-ddns //g' include/target.mk
-# sed -i 's/ddns-scripts_aliyun //g' include/target.mk
-# sed -i 's/ddns-scripts_dnspod //g' include/target.mk
+echo '删除部分DEFAULT_PACKAGES'
+sed -i 's/luci-app-ssr-plus //g' include/target.mk
+sed -i 's/luci-app-unblockmusic //g' include/target.mk
+sed -i 's/luci-app-ddns //g' include/target.mk
+sed -i 's/ddns-scripts_aliyun //g' include/target.mk
+sed -i 's/ddns-scripts_dnspod //g' include/target.mk
+
+echo '修改打包版本信息'
+version=$(grep "DISTRIB_REVISION=" package/lean/default-settings/files/zzz-default-settings  | awk -F "'" '{print $2}')
+sed -i '/DISTRIB_REVISION/d' package/lean/default-settings/files/zzz-default-settings
+echo "echo \"DISTRIB_REVISION='${version} $(TZ=UTC-8 date "+%Y.%m.%d") Compilde by Zenith'\" >> /etc/openwrt_release" >> package/lean/default-settings/files/zzz-default-settings
+sed -i '/exit 0/d' package/lean/default-settings/files/zzz-default-settings
+echo "exit 0" >> package/lean/default-settings/files/zzz-default-settings
 
 echo '##################################################'
 echo '##                  开始下载dl库                  ##'
@@ -87,7 +110,7 @@ echo '##                  开始编译固件                  ##'
 echo '##################################################'
 
 make defconfig
-make -j$(nproc) V=s
+make -j$(($(nproc) + 1)) V=s
 cd ../
 
 echo '#################################################'
@@ -102,12 +125,6 @@ else
   cd openwrt_packit
 fi
 mv ../openwrt/bin/targets/armvirt/64/openwrt-armvirt-64-default-rootfs.tar.gz ./
-
-# remove patch
-sed -i '/patch_admin_status_index_html/d' mk_s905*.sh
-# modify dtb
-sed -i 's|FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|#FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|g' mk_s905x3_multi.sh
-sed -i 's|#FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|g' mk_s905x3_multi.sh
 # remove clash adjust
 sed -i '/openclash/d' mk_s905*.sh
 # remove ss
@@ -119,8 +136,8 @@ sed -i '/bin\/AdGuardHome/d' files/first_run.sh
 sed -i 's/usr\/share\/openclash\/core/etc\/alist\/ \\\
 .\/root\/.config\/rclone/g' files/openwrt-backup
 
-# sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
-# sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
+sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
+sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
 source make.env
 KERNEL_VERSION_SHORT=$(echo $KERNEL_VERSION | awk -F- '{print $1}')
 cd ../
