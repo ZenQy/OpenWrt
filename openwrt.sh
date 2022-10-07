@@ -21,11 +21,13 @@ function update_3rd_repo() {
   cd package/community
 
   # Add repos
-  for repo in 'luci-theme-argon' 'luci-app-netdata' 'luci-app-v2raya' 'v2raya' 'luci-app-adguardhome' 
+  for repo in 'luci-theme-argon' 'luci-app-netdata' 'luci-app-adguardhome' 
+  # 'luci-app-v2raya' 'v2raya' 功能较少，与服务器配置不匹配
   # 'luci-app-alist' 'alist' 编译失败
   do
     svn co https://github.com/kiddin9/openwrt-packages/trunk/$repo
   done
+  git clone --depth=1 https://github.com/zenqy/luci-app-v2ray
   cd ../../
 }
 
@@ -57,10 +59,11 @@ function modify_repo() {
   sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 
   # echo '增加部分翻译'
-  echo -e '\nmsgid "NetData"\nmsgstr "实时监控"' >> feeds/luci/modules/luci-base/po/zh_Hans/base.po
+  # echo -e '\nmsgid "NetData"\nmsgstr "实时监控"' >> feeds/luci/modules/luci-base/po/zh_Hans/base.po
 
   # echo '替换默认主题'
   sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+  rm -rf feeds/luci/themes
 }
 
 function update_packit() {
@@ -78,8 +81,6 @@ function update_packit() {
 }
 
 function modify_packit() {
-  # remove patch
-  sed -i '/patch_admin_status_index_html/d' mk_s905*.sh
   # modify dtb
   sed -i 's|FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|#FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|g' mk_s905x3_multi.sh
   sed -i 's|#FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|g' mk_s905x3_multi.sh
@@ -98,6 +99,31 @@ function modify_packit() {
 
   # sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
   # sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
+
+  cat << EOF >> public_funcs
+# 调整 rc.local 配置
+function adjust_rclocal_config() {
+    echo -n "调整 rc.local 配置 ... "
+    (
+        cd \$TGT_ROOT
+        sed -i '/exit/d' ./etc/rc.local
+        cat << EOF2 >> ./etc/rc.local
+ROOT_PTNAME=\\\$(df / | tail -n1 | awk '{print \\\$1}' | awk -F '/' '{print \\\$3}')
+DISK_NAME=\\\$(echo \\\$ROOT_PTNAME | awk '{print substr(\\\$1, 1, length(\\\$1)-1)}')
+mount /dev/\\\${DISK_NAME}1 /boot
+for i in 2 3 4
+do
+  if [ "\\\${DISK_NAME}\\\${i}" != "\\\$ROOT_PTNAME" ]; then
+    [ -d /mnt/\\\${DISK_NAME}\\\${i} ] || mkdir /mnt/\\\${DISK_NAME}\\\${i}
+    mount /dev/\\\${DISK_NAME}\\\${i} /mnt/\\\${DISK_NAME}\\\${i}
+  fi
+done
+EOF2
+    )
+}
+EOF
+
+
 }
 
 function update_kernel() {
@@ -111,8 +137,8 @@ function update_kernel() {
   [[ -d "kernel" ]] || mkdir kernel
   cd kernel
   [[ -e "boot-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/boot-${KERNEL_VERSION}.tar.gz"
-  [[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar. gz"
-  [[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/dtb-amlogic-$  {KERNEL_VERSION}.tar.gz"
+  [[ -e "modules-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/modules-${KERNEL_VERSION}.tar.gz"
+  [[ -e "dtb-amlogic-${KERNEL_VERSION}.tar.gz" ]] || wget "https://github.com/ophub/kernel/raw/main/pub/stable/${KERNEL_VERSION_SHORT}/dtb-amlogic-${KERNEL_VERSION}.tar.gz"
 }
 
 function do_packit() {

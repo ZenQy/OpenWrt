@@ -1,6 +1,6 @@
 # OpenWrt
 
-[![lede](https://img.shields.io/badge/github-lede-blue.svg?style=flat&logo=github)](https://github.com/coolsnowwolf/lede)
+[![OpenWRT](https://img.shields.io/badge/github-lede-blue.svg?style=flat&logo=github)](https://github.com/openwrt/openwrt)
 ![GitHub](https://img.shields.io/github/license/ZenQy/Openwrt)
 
 ## 如何使用
@@ -27,9 +27,8 @@
 
 ## 在线升级方法
 
-  1. 上传 img 到/mnt/mmcblk2p4
-  2. cd /mnt/mmcblk2p4
-  3. openwrt-update-amlogic
+  1. 上传 img/img.gz 到/mnt/mmcblk2p4
+  2. openwrt-update-amlogic
 
 ------
 
