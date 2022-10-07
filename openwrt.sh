@@ -21,14 +21,14 @@ function update_3rd_repo() {
   cd package/community
 
   # Add repos
-  for repo in 'luci-theme-argon' 'luci-app-netdata' 'luci-app-adguardhome' 
+  for repo in 'luci-theme-argon' 'luci-app-netdata' 'luci-app-adguardhome'
   # 'luci-app-v2raya' 'v2raya' 功能较少，与服务器配置不匹配
   # 'luci-app-alist' 'alist' 编译失败
   do
     svn co https://github.com/kiddin9/openwrt-packages/trunk/$repo
   done
-  git clone --depth=1 https://github.com/zenqy/luci-app-v2ray
-  cd ../../
+
+  cd ../..
 }
 
 function update_feeds() {
@@ -64,6 +64,10 @@ function modify_repo() {
   # echo '替换默认主题'
   sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
   rm -rf feeds/luci/themes
+
+  # 修正luci-app-adguardhome
+  sed -i 's|etc/AdGuardHome.yaml|etc/adguardhome.yaml|g' package/community/luci-app-adguardhome/root/etc/init.d/AdGuardHome
+  sed -i 's|etc/AdGuardHome.yaml|etc/adguardhome.yaml|g' package/community/luci-app-adguardhome/root/etc/config/AdGuardHome
 }
 
 function update_packit() {
@@ -84,8 +88,8 @@ function modify_packit() {
   # modify dtb
   sed -i 's|FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|#FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|g' mk_s905x3_multi.sh
   sed -i 's|#FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|g' mk_s905x3_multi.sh
-  # remove clash adjust
-  sed -i '/openclash/d' mk_s905*.sh
+  # remove clash adjust and add rclocal
+  sed -i 's/openclash/rclocal/g' mk_s905*.sh
   # remove ss
   sed -i '/extract_glibc_programs/d' mk_s905*.sh
   # remove AdguardHome init
@@ -93,10 +97,11 @@ function modify_packit() {
   sed -i '/bin\/AdGuardHome/d' files/first_run.sh
   sed -i '/AdGuardHome/,+1d' files/openwrt-update-amlogic
   sed -i '/bin\/AdGuardHome/d' files/openwrt-install-amlogic
-  # add alist buckup
+  # add alist、rclone buckup
   sed -i 's/usr\/share\/openclash\/core/etc\/alist\/ \\\
   .\/root\/.config\/rclone/g' files/openwrt-backup
-
+  # add AdGuardHome
+  sed -i 's/AdGuardHome/adguardhome/g' files/openwrt-backup
   # sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
   # sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
 
