@@ -1,51 +1,5 @@
 #!/bin/bash
 
-function update_main_repo() {
-  echo '======开始更新主仓库======'
-  if [[ -d "openwrt" ]]; then
-    cd openwrt
-    git checkout .
-    git pull
-    cd ..
-  else
-    git clone --depth=1 https://github.com/openwrt/openwrt openwrt
-  fi
-}
-
-function update_3rd_repo() {
-  echo '======开始更新第三方仓库======'
-  if [[ -d "package/community" ]]; then
-    rm -rf package/community
-  fi
-  mkdir package/community
-  cd package/community
-
-  # Add repos
-  for repo in 'luci-theme-argon' 'luci-app-netdata' 'luci-app-adguardhome'
-  # 'luci-app-v2raya' 'v2raya' 功能较少，与服务器配置不匹配
-  # 'luci-app-alist' 'alist' 编译失败
-  do
-    svn co https://github.com/kiddin9/openwrt-packages/trunk/$repo
-  done
-
-  cd ../..
-}
-
-function update_feeds() {
-  echo '======开始更新feeds仓库======'
-  cd feeds
-  for dir in 'luci' 'packages' 'routing' 'telephony'
-  do
-    cd $dir
-    git checkout .
-    cd ..
-  done
-  cd ..
-
-  ./scripts/feeds update -a
-  ./scripts/feeds install -a
-}
-
 function modify_repo() {
   echo '======开始自定义修改======'
 
@@ -58,16 +12,22 @@ function modify_repo() {
   # echo '修改时区'
   sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 
-  # echo '增加部分翻译'
-  # echo -e '\nmsgid "NetData"\nmsgstr "实时监控"' >> feeds/luci/modules/luci-base/po/zh_Hans/base.po
-
   # echo '替换默认主题'
   sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-  rm -rf feeds/luci/themes
+  # rm -rf feeds/luci/themes
 
-  # 修正luci-app-adguardhome
-  sed -i 's|etc/AdGuardHome.yaml|etc/adguardhome.yaml|g' package/community/luci-app-adguardhome/root/etc/init.d/AdGuardHome
-  sed -i 's|etc/AdGuardHome.yaml|etc/adguardhome.yaml|g' package/community/luci-app-adguardhome/root/etc/config/AdGuardHome
+  # 删除原仓库软件
+  rm -rf  feeds/packages/net/adguardhome
+  # 删除feeds仓库软件
+
+  # 删除第三方仓库软件
+  cd package/community/openwrt-packages
+  ls | grep -v adguardhome \
+     | grep -v luci-app-openclash \
+     | grep -v alist \
+     | grep -v luci-theme-argon \
+     | xargs  rm -rf
+  cd ../../..
 }
 
 function update_packit() {
@@ -88,8 +48,8 @@ function modify_packit() {
   # modify dtb
   sed -i 's|FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|#FDT=/dtb/amlogic/meson-sm1-x96-max-plus-100m.dtb|g' mk_s905x3_multi.sh
   sed -i 's|#FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|FDT=/dtb/amlogic/meson-sm1-tx3-qz.dtb|g' mk_s905x3_multi.sh
-  # remove clash adjust and add rclocal
-  sed -i 's/openclash/rclocal/g' mk_s905*.sh
+  # remove clash adjust
+  sed -i '/openclash/d' mk_s905*.sh
   # remove ss
   sed -i '/extract_glibc_programs/d' mk_s905*.sh
   # remove AdguardHome init
@@ -100,35 +60,6 @@ function modify_packit() {
   # add alist、rclone buckup
   sed -i 's/usr\/share\/openclash\/core/etc\/alist\/ \\\
   .\/root\/.config\/rclone/g' files/openwrt-backup
-  # add AdGuardHome
-  sed -i 's/AdGuardHome/adguardhome/g' files/openwrt-backup
-  # sed -i 's/ENABLE_WIFI_K504=1/ENABLE_WIFI_K504=0/g' make.env
-  # sed -i 's/ENABLE_WIFI_K510=1/ENABLE_WIFI_K510=0/g' make.env
-
-  cat << EOF >> public_funcs
-# 调整 rc.local 配置
-function adjust_rclocal_config() {
-    echo -n "调整 rc.local 配置 ... "
-    (
-        cd \$TGT_ROOT
-        sed -i '/exit/d' ./etc/rc.local
-        cat << EOF2 >> ./etc/rc.local
-ROOT_PTNAME=\\\$(df / | tail -n1 | awk '{print \\\$1}' | awk -F '/' '{print \\\$3}')
-DISK_NAME=\\\$(echo \\\$ROOT_PTNAME | awk '{print substr(\\\$1, 1, length(\\\$1)-1)}')
-mount /dev/\\\${DISK_NAME}1 /boot
-for i in 2 3 4
-do
-  if [ "\\\${DISK_NAME}\\\${i}" != "\\\$ROOT_PTNAME" ]; then
-    [ -d /mnt/\\\${DISK_NAME}\\\${i} ] || mkdir /mnt/\\\${DISK_NAME}\\\${i}
-    mount /dev/\\\${DISK_NAME}\\\${i} /mnt/\\\${DISK_NAME}\\\${i}
-  fi
-done
-EOF2
-    )
-}
-EOF
-
-
 }
 
 function update_kernel() {
@@ -150,7 +81,7 @@ function do_packit() {
   echo '======开始制作固件======'
   cd ../openwrt_packit
   sudo ./mk_s905d_n1.sh
-  # sudo ./mk_s905x3_multi.sh
+  sudo ./mk_s905x3_multi.sh
   sudo chown -R zenqy:zenqy output
   rm openwrt-armvirt-64-default-rootfs.tar.gz
   cd output
@@ -177,25 +108,21 @@ function move_to_repo() {
 }
 
 
-echo '======开始======'
+# echo '======开始======'
 
-update_main_repo
-cd openwrt
-
-update_3rd_repo
-
-# echo '拷贝配置文件'
-cp -f ../openwrt.config .config
+# 设置环境变量
 export GOPROXY=https://goproxy.cn
 
-update_feeds
+cd openwrt
+# echo '拷贝配置文件'
+# cp -f ../openwrt.config .config
 
 modify_repo
 
-echo '======开始下载dl库======'
+# echo '======开始下载dl库======'
 make -j$(nproc) download V=s
 
-echo '======开始编译固件======'
+# echo '======开始编译固件======'
 make -j$(nproc) V=s
 cd ../
 
