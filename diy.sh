@@ -42,4 +42,5 @@ wget -qO- $GEOIP_URL > etc/openclash/GeoIP.dat
 wget -qO- $GEOSITE_URL > etc/openclash/GeoSite.dat
 chmod +x etc/openclash/core/clash*
 # authorized_keys
+mkdir -p etc/dropbear
 echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDby5ETsMVosxG6x7y7siSU8UtTlROYzR183QEEp+lGrDEnfJ6Ozk2aIEEcLbo/MbiG+efdD03h8gwdbfTDytYY+3yPlhVC7XsmzqsAoKD9CYXtU0GyHkaIn8/1l0KK42VYgoi02dA5GDNf0N0b1ly013lmaWjkrwF/3ww6PkjXfzyD7k/TqyitYeJctPJZjLjhZc/OB3nPdZT95XDZ4ArnIDBoJajd2zlf0EwpJJ9ALwYX7gM1cHteV0kzT7WhkK9iLGEQcnQq0IVpVBzG47+t7mwAi/OnN9NAb8bg0PCxX3oesHGQ96mbS0RXvfAqCb4UQqAN2fEVOCSWwQjfGwhb zenqy@linux' > etc/dropbear/authorized_keys
