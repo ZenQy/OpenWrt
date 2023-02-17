@@ -1,0 +1,198 @@
+#===============================================
+# Description: Build OpenWrt
+# File name: build-openwrt.yml
+# Lisence: MIT
+# Author: P3TERX
+# https://github.com/P3TERX
+#===============================================
+
+name: Build OpenWrt
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 22 * * *
+
+env:
+  REPO_URL: https://github.com/openwrt/openwrt
+  REPO_BRANCH: openwrt-22.03
+  CONFIG_FILE: openwrt.config
+  INIT_FILE: 99-default-settings
+  DIY_SCRIPT: diy.sh
+  TZ: Asia/Shanghai
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Check Server Performance
+      run: |
+        echo "警告⚠"
+        echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
+        echo -e "已知CPU型号（降序）：8370C，8272CL，8171M，E5-2673 \n"
+        echo "--------------------------CPU信息--------------------------"
+        echo "CPU物理数量：$(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
+        echo -e "CPU核心信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
+        echo "--------------------------内存信息--------------------------"
+        echo "已安装内存详细信息："
+        echo -e "$(sudo lshw -short -C memory | grep GiB) \n"
+        echo "--------------------------硬盘信息--------------------------"
+        echo "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
+
+    - name: Initialization Environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        docker rmi $(docker images -q)
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /etc/mysql /usr/local/lib/android
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install $(curl -fsSL is.gd/depends_ubuntu_2204)
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+
+    - name: Clone Source Code
+      id: clone
+      run: |
+        df -hT $GITHUB_WORKSPACE
+        mkdir upload
+        echo "UPLOAD_PATH=$GITHUB_WORKSPACE/upload" >> $GITHUB_ENV
+        git clone --depth=1 -b $REPO_BRANCH $REPO_URL openwrt
+        cd openwrt
+        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+        VERSION_INFO=$(git show -s --date=short --format="Author: %an<br/>date: %cd<br/>commit: %s<br/>commit hash: %H")
+        echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
+        KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ophub/kernel/contents/pub/stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}')
+        echo "KERNEL_VERSION_NAME=$KERNEL_VERSION_NAME" >> $GITHUB_ENV
+
+    - name: Install Feeds
+      run: |
+        cd $OPENWRT_PATH
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+
+    - name: Load Custom Configuration
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
+        chmod +x $DIY_SCRIPT
+        cd $OPENWRT_PATH
+        $GITHUB_WORKSPACE/$DIY_SCRIPT
+
+    - name: Download DL Package
+      run: |
+        cd $OPENWRT_PATH
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+
+    - name: Generate Variables
+      run: |
+        cd $OPENWRT_PATH
+        DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
+        echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
+        DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
+        echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
+
+    - name: Compile Packages
+      run: |
+        cd $OPENWRT_PATH
+        echo -e "$(nproc) thread compile"
+        make tools/compile -j$(nproc) || make tools/compile -j1 V=s
+        make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+        make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
+        make diffconfig
+        make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
+        make package/index
+
+    - name: Generate Firmware
+      run: |
+        cd $OPENWRT_PATH
+        mkdir -p files/etc/uci-defaults
+        cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
+        make package/install -j$(nproc) || make package/install -j1 V=s
+        make target/install -j$(nproc) || make target/install -j1 V=s
+        echo "status=success" >> $GITHUB_OUTPUT
+        make checksum
+        echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+        echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
+
+    - name: Check Space Usage
+      if: always()
+      run: df -hT
+
+    - name: Organize Files
+      if: success()
+      run: |
+        cd $OPENWRT_PATH/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET
+        echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
+        cat sha256sums
+        ROOTFS_NAME=openwrt-$DEVICE_TARGET-$DEVICE_SUBTARGET-default-rootfs.tar.gz
+        echo "ROOTFS_NAME=$ROOTFS_NAME" >> $GITHUB_ENV
+        cp $OPENWRT_PATH/.config $UPLOAD_PATH/build.config
+
+    - name: Package OpenWrt Firmware
+      if: success()
+      uses: ophub/flippy-openwrt-actions@main
+      env:
+        OPENWRT_ARMVIRT_PATH: ${{ env.FIRMWARE_PATH }}/${{ env.ROOTFS_NAME }}
+        KERNEL_REPO_URL: https://github.com/ophub/kernel/tree/main/pub/stable
+        KERNEL_VERSION_NAME: ${{ env.KERNEL_VERSION_NAME }}
+        KERNEL_AUTO_LATEST: true
+        PACKAGE_SOC: s905x3_s905d
+        SELECT_OUTPUTPATH: ${{ env.UPLOAD_PATH }}
+        WHOAMI: Zenith
+        DISTRIB_REVISION: R${{ env.DATE }} by Zenith
+        GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+
+    - name: Upload OpenWrt To Release
+      if: env.PACKAGED_STATUS == 'success'
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        removeArtifacts: true
+        tag: v${{ env.DATE }}
+        token: ${{ secrets.RELEASES_TOKEN }}
+        artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
+        body: |
+          默认IP：10.0.0.5 默认密码： password
+
+          全新刷入emmc方法：
+          固件刷入U盘。
+          openwrt-install-amlogic
+          拔掉U盘，断电重启。
+
+          在线升级方法：
+          上传 img 到/mnt/mmcblk2p4
+          openwrt-update-amlogic
+        
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: success()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+
+    - name: Delete older workflow runs and artifacts
+      if: success()
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.RELEASES_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 3
+        keep_minimum_runs: 3
+
+    - name: Telegram notification
+      if: success()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ${{ env.ROOTFS_NAME }} 于${{ env.TIME }}打包完成！

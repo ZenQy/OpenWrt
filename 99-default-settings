@@ -1,0 +1,30 @@
+#!/bin/sh
+
+uci -q set luci.main.lang='zh_cn'
+uci -q set luci.main.mediaurlbase=/luci-static/argon
+uci commit luci
+
+uci -q set dropbear.@dropbear[0].Interface='lan'
+uci commit dropbear
+
+uci -q del network.lan
+uci -q set network.lan='interface'
+uci -q set network.lan.device='eth0'
+uci -q set network.lan.proto='static'
+uci -q set network.lan.ipaddr='10.0.0.5'
+uci -q set network.lan.netmask='255.255.255.0'
+uci -q set network.lan.gateway='10.0.0.11'
+uci -q set network.lan.delegate='0'
+uci commit network
+
+uci -q set system.@system[0].zonename='Asia/Shanghai'
+uci -q set system.@system[0].timezone='CST-8'
+uci -q del system.ntp.server
+uci -q add_list system.ntp.server='ntp.aliyun.com'
+uci -q add_list system.ntp.server='0.openwrt.pool.ntp.org'
+uci commit system
+
+rm -rf /tmp/luci-*
+
+# Disable opkg signature check
+sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
