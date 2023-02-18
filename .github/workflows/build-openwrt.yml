@@ -35,7 +35,7 @@ jobs:
         repository: ${{ github.repository }}
         retain_days: 3
         keep_minimum_runs: 3
-        
+
     - name: Checkout
       uses: actions/checkout@main
 
@@ -110,9 +110,10 @@ jobs:
 
     - name: Generate Firmware
       run: |
+        cd $OPENWRT_PATH
         mkdir -p files/etc/uci-defaults
         cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
-        make -j$(nproc) V=s || make -j1 V=s
+        make -j$(nproc) || make -j1 || make -j1 V=s
         echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
         echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
 
