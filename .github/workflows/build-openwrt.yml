@@ -11,7 +11,7 @@ name: Build OpenWrt
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 22 * * *
+    - cron: 0 4 * * *
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt
@@ -24,6 +24,7 @@ env:
 jobs:
   Build:
     runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
 
@@ -176,10 +177,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
 
     - name: Telegram notification
-      if: success()
+      if: always()
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
-          ${{ env.ROOTFS_NAME }} 于${{ env.TIME }}打包完成！
+          本次打包于${{ env.TIME }}结束！
