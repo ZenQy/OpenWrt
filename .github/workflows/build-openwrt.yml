@@ -26,6 +26,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Delete older workflow runs and artifacts
+      if: success()
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.RELEASES_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 3
+        keep_minimum_runs: 3
+        
     - name: Checkout
       uses: actions/checkout@main
 
@@ -98,26 +108,11 @@ jobs:
         DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
         echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
 
-    - name: Compile Packages
-      run: |
-        cd $OPENWRT_PATH
-        echo -e "$(nproc) thread compile"
-        make tools/compile -j$(nproc) || make tools/compile -j1 V=s
-        make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
-        make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
-        make diffconfig
-        make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
-        make package/index
-
     - name: Generate Firmware
       run: |
-        cd $OPENWRT_PATH
         mkdir -p files/etc/uci-defaults
         cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
-        make package/install -j$(nproc) || make package/install -j1 V=s
-        make target/install -j$(nproc) || make target/install -j1 V=s
-        echo "status=success" >> $GITHUB_OUTPUT
-        make checksum
+        make -j$(nproc) V=s || make -j1 V=s
         echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
         echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
 
@@ -178,15 +173,6 @@ jobs:
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
-
-    - name: Delete older workflow runs and artifacts
-      if: success()
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-        token: ${{ secrets.RELEASES_TOKEN }}
-        repository: ${{ github.repository }}
-        retain_days: 3
-        keep_minimum_runs: 3
 
     - name: Telegram notification
       if: success()
