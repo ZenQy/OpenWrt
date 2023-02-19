@@ -28,7 +28,6 @@ ls | grep -v adguardhome \
    | grep -v luci-app-openclash \
    | grep -v luci-theme-argon \
    | grep -v luci-app-netdata \
-   | grep -v alist \
    | xargs  rm -rf
 
 # 下载clash文件
