@@ -6,7 +6,7 @@
 # https://github.com/P3TERX
 #===============================================
 
-name: Build Flippy Lede Package
+name: Build OpenWrt
 
 on:
   workflow_dispatch:
@@ -97,6 +97,8 @@ jobs:
         cd $OPENWRT_PATH
         make defconfig
         make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
     - name: Generate Variables
       run: |
@@ -109,8 +111,8 @@ jobs:
     - name: Generate Firmware
       run: |
         cd $OPENWRT_PATH
-        mkdir -p files/etc/uci-defaults
-        cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
+        # mkdir -p files/etc/uci-defaults
+        # cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
         echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
