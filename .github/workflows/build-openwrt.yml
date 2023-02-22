@@ -6,7 +6,7 @@
 # https://github.com/P3TERX
 #===============================================
 
-name: Build OpenWrt
+name: Build Flippy Lede Package
 
 on:
   workflow_dispatch:
@@ -24,8 +24,7 @@ env:
 jobs:
   Build:
     runs-on: ubuntu-latest
-    if: github.event.repository.owner.id == github.event.sender.id
-
+    
     steps:
 
     - name: Delete older workflow runs and artifacts
@@ -98,8 +97,6 @@ jobs:
         cd $OPENWRT_PATH
         make defconfig
         make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
 
     - name: Generate Variables
       run: |
