@@ -135,7 +135,7 @@ jobs:
       if: success()
       uses: ophub/flippy-openwrt-actions@main
       env:
-        OPENWRT_ARMVIRT_PATH: ${{ env.FIRMWARE_PATH }}/${{ env.ROOTFS_NAME }}
+        OPENWRT_ARMVIRT: ${{ env.FIRMWARE_PATH }}/${{ env.ROOTFS_NAME }}
         KERNEL_REPO_URL: https://github.com/ophub/kernel/tree/main/pub/stable
         KERNEL_VERSION_NAME: ${{ env.KERNEL_VERSION_NAME }}
         KERNEL_AUTO_LATEST: true
