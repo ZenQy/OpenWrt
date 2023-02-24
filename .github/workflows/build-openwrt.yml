@@ -85,10 +85,10 @@ jobs:
           ${{ runner.os }}-openwrt-
           ${{ runner.os }}-
         path: |
-          ${{ env.OPENWRT_PATH }}/bin
+          # ${{ env.OPENWRT_PATH }}/bin
           ${{ env.OPENWRT_PATH }}/build_dir
-          ${{ env.OPENWRT_PATH }}/dl
-          ${{ env.OPENWRT_PATH }}/feeds
+          # ${{ env.OPENWRT_PATH }}/dl
+          # ${{ env.OPENWRT_PATH }}/feeds
           ${{ env.OPENWRT_PATH }}/staging_dir
           ${{ env.OPENWRT_PATH }}/tmp
 
@@ -127,12 +127,13 @@ jobs:
         mkdir -p files/etc/uci-defaults
         cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
         make -j$(nproc) || make -j1 || make -j1 V=s
-        echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
-        echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
 
     - name: Check Space Usage
       if: always()
-      run: df -hT
+      run: |
+        df -hT
+        echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+        echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
 
     - name: Organize Files
       if: success()
