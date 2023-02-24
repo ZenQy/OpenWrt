@@ -151,7 +151,7 @@ jobs:
         removeArtifacts: true
         tag: v${{ env.DATE }}
         token: ${{ secrets.RELEASES_TOKEN }}
-        artifacts: ${{ env.PACKAGED_OUTPUTPATH }},${{ env.UPLOAD_PATH }}
+        artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*,${{ env.UPLOAD_PATH }}/*
         body: |
           默认IP：10.0.0.5 默认密码： password
 
@@ -165,7 +165,7 @@ jobs:
           openwrt-update-amlogic
         
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
+      uses: dev-drprasad/delete-older-releases@v0.2.1
       if: success()
       with:
         keep_latest: 3
