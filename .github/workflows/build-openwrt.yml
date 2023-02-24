@@ -66,7 +66,6 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
 
     - name: Clone Source Code
-      id: clone
       run: |
         df -hT $GITHUB_WORKSPACE
         mkdir upload
@@ -77,20 +76,20 @@ jobs:
         KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ophub/kernel/contents/pub/stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}')
         echo "KERNEL_VERSION_NAME=$KERNEL_VERSION_NAME" >> $GITHUB_ENV
 
-      - name: Cache Build Files
-        uses: actions/cache@v3
-        with:
-          key: ${{ runner.os }}-openwrt-${{ env.KERNEL_VERSION_NAME }}
-          restore-keys: |
-            ${{ runner.os }}-openwrt-
-            ${{ runner.os }}-
-          path: |
-            ${{ env.OPENWRT_PATH }}/bin
-            ${{ env.OPENWRT_PATH }}/build_dir
-            ${{ env.OPENWRT_PATH }}/dl
-            ${{ env.OPENWRT_PATH }}/feeds
-            ${{ env.OPENWRT_PATH }}/staging_dir
-            ${{ env.OPENWRT_PATH }}/tmp
+    - name: Cache Build Files
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-openwrt-${{ env.KERNEL_VERSION_NAME }}
+        restore-keys: |
+          ${{ runner.os }}-openwrt-
+          ${{ runner.os }}-
+        path: |
+          ${{ env.OPENWRT_PATH }}/bin
+          ${{ env.OPENWRT_PATH }}/build_dir
+          ${{ env.OPENWRT_PATH }}/dl
+          ${{ env.OPENWRT_PATH }}/feeds
+          ${{ env.OPENWRT_PATH }}/staging_dir
+          ${{ env.OPENWRT_PATH }}/tmp
 
     - name: Install Feeds
       run: |
