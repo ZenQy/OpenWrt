@@ -24,6 +24,9 @@ uci -q add_list system.ntp.server='ntp.aliyun.com'
 uci -q add_list system.ntp.server='0.openwrt.pool.ntp.org'
 uci commit system
 
+uci -q del wireless.default_radio0
+uci commit wireless
+
 rm -rf /tmp/luci-*
 
 # Disable opkg signature check
