@@ -5,7 +5,7 @@
 
 ## 如何使用
 
-因`github action`出现弱鸡CPU，改为在本地或云服务器上进行编译。
+通过`github action`手动/定时进行编译。
 
 ------
 
@@ -13,7 +13,7 @@
 
  * User: root
  * Password: password
- * Default IP: 10.0.0.11
+ * Default IP: 10.0.0.5
 
 ------
 
