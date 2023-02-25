@@ -31,4 +31,3 @@ rm -rf /tmp/luci-*
 
 # Disable opkg signature check
 sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
-sed -i 's/127.0.0.1/119.29.29.29/g' /etc/resolv.conf
