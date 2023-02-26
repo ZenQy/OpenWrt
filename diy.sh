@@ -28,10 +28,6 @@ ls | grep -v adguardhome \
    | grep -v luci-app-openclash \
    | grep -v luci-theme-argon \
    | grep -v luci-app-netdata \
-   | grep -v luci-app-turboacc \
-   | grep -v dnsforwarder \
-   | grep -v pdnsd-alt \
-   | grep -v shortcut-fe \
    | grep -v alist \
    | xargs  rm -rf
 
