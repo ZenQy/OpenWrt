@@ -15,6 +15,8 @@ uci -q set network.lan.ipaddr='10.0.0.5'
 uci -q set network.lan.netmask='255.255.255.0'
 uci -q set network.lan.gateway='10.0.0.11'
 uci -q set network.lan.delegate='0'
+uci -q del network.@device[0]
+uci -q del network.globals.ula_prefix
 uci commit network
 
 uci -q set system.@system[0].zonename='Asia/Shanghai'
@@ -31,3 +33,5 @@ rm -rf /tmp/luci-*
 
 # Disable opkg signature check
 sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
+# Add environment variables
+sed -i "15aexport TERM=xterm" /etc/profile
