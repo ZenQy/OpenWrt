@@ -29,15 +29,20 @@ ls | grep -v adguardhome \
    | grep -v luci-theme-argon \
    | grep -v luci-app-netdata \
    | grep -v alist \
+   | grep -v filebrowser \
    | xargs  rm -rf
+
+
+echo "CONFIG_PACKAGE_luci-app-openclash=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
 
 # 下载clash文件
 cd ../../base-files/files
 mkdir -p etc/openclash/core
-CLASH_TUN_URL=$(curl -fsSL https://api.github.com/repos/vernesong/OpenClash/contents/core-lateset/premium | grep download_url | grep arm64 | awk -F '"' '{print $4}')
+CLASH_URL=$(curl -fsSL https://api.github.com/repos/vernesong/OpenClash/contents/dev/meta?ref=core | grep download_url | grep arm64 | awk -F '"' '{print $4}')
 GEOIP_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
 # GEOSITE_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-wget -qO- $CLASH_TUN_URL | gunzip -c > etc/openclash/core/clash_tun
+wget -qO- $CLASH_URL | gunzip -c > etc/openclash/core/clash_meta
 wget -qO- $GEOIP_URL > etc/openclash/GeoIP.dat
 # wget -qO- $GEOSITE_URL > etc/openclash/GeoSite.dat
 chmod +x etc/openclash/core/clash*
