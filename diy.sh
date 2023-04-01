@@ -32,10 +32,6 @@ ls | grep -v adguardhome \
    | grep -v filebrowser \
    | xargs  rm -rf
 
-
-echo "CONFIG_PACKAGE_luci-app-openclash=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
-
 # 下载clash文件
 cd ../../base-files/files
 mkdir -p etc/openclash/core
