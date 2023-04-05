@@ -32,6 +32,16 @@ ls | grep -v adguardhome \
    | grep -v luci-app-v2raya \
    | xargs  rm -rf
 
+# 下载clash文件
+cd ../../base-files/files
+mkdir -p etc/openclash/core
+CLASH_URL=$(curl -fsSL https://api.github.com/repos/vernesong/OpenClash/contents/dev/premium?ref=core | grep download_url | grep arm64 | awk -F '"' '{print $4}')
+GEOIP_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+# GEOSITE_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+wget -qO- $CLASH_URL | gunzip -c > etc/openclash/core/clash_tun
+wget -qO- $GEOIP_URL > etc/openclash/GeoIP.dat
+# wget -qO- $GEOSITE_URL > etc/openclash/GeoSite.dat
+chmod +x etc/openclash/core/clash*
 # authorized_keys
 mkdir -p etc/dropbear
 echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDby5ETsMVosxG6x7y7siSU8UtTlROYzR183QEEp+lGrDEnfJ6Ozk2aIEEcLbo/MbiG+efdD03h8gwdbfTDytYY+3yPlhVC7XsmzqsAoKD9CYXtU0GyHkaIn8/1l0KK42VYgoi02dA5GDNf0N0b1ly013lmaWjkrwF/3ww6PkjXfzyD7k/TqyitYeJctPJZjLjhZc/OB3nPdZT95XDZ4ArnIDBoJajd2zlf0EwpJJ9ALwYX7gM1cHteV0kzT7WhkK9iLGEQcnQq0IVpVBzG47+t7mwAi/OnN9NAb8bg0PCxX3oesHGQ96mbS0RXvfAqCb4UQqAN2fEVOCSWwQjfGwhb zenqy@linux' > etc/dropbear/authorized_keys
