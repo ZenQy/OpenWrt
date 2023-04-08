@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# 修改.config
-#
-
 # 修改机器名称
 # sed -i 's/OpenWrt/Phicomm-N1/g' package/base-files/files/bin/config_generate
 # 修改默认IP
@@ -26,11 +23,19 @@ git clone --depth=1 https://github.com/kiddin9/openwrt-packages
 cd openwrt-packages
 ls | grep -v luci-theme-argon \
    | grep -v luci-app-netdata \
+   | grep -v adguardhome \
+   | grep -v alist \
+   | grep -v filebrowser \
+   | grep -v luci-app-homeproxy \
+   | grep -v sing-box \
    | xargs  rm -rf
 
-   # | grep -v adguardhome \
-   # | grep -v alist \
-   # | grep -v filebrowser \
+# 修改.config
+echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> .config
 
 cd ../../base-files/files
 # 下载clash文件
