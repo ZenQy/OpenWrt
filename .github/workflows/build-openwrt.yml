@@ -1,11 +1,3 @@
-#===============================================
-# Description: Build OpenWrt
-# File name: build-openwrt.yml
-# Lisence: MIT
-# Author: P3TERX
-# https://github.com/P3TERX
-#===============================================
-
 name: Build OpenWrt
 
 on:
@@ -82,14 +74,6 @@ jobs:
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
         KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/latest | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
         echo "KERNEL_VERSION_NAME=$KERNEL_VERSION_NAME" >> $GITHUB_ENV
-
-    - name: Cache OpenWrt
-      uses: actions/cache@v3
-      with:
-        path: |
-          ${{ env.OPENWRT_PATH }}/build_dir
-          ${{ env.OPENWRT_PATH }}/staging_dir
-        key: ${{ runner.os }}-openwrt
 
     - name: Install Feeds
       run: |
