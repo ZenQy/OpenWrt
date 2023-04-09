@@ -15,6 +15,13 @@ sed -i 's/+luci-theme-bootstrap//g' package/feeds/luci/luci-ssl-nginx/Makefile
 rm -rf feeds/packages/net/adguardhome
 rm -rf feeds/luci/themes
 
+# 修改.config
+echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> .config
+
 # 添加第三方仓库
 mkdir -p package/community
 cd package/community
@@ -29,13 +36,6 @@ ls | grep -v luci-theme-argon \
    | grep -v luci-app-homeproxy \
    | grep -v sing-box \
    | xargs  rm -rf
-
-# 修改.config
-echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> .config
 
 cd ../../base-files/files
 # 下载clash文件
