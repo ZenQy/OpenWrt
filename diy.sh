@@ -21,11 +21,15 @@ echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-xray=y" >> .config
 
 # 添加第三方仓库
 mkdir -p package/community
 cd package/community
 git clone --depth=1 https://github.com/kiddin9/openwrt-packages
+git clone --depth=1 https://github.com/ttimasdf/luci-app-xray
+git clone --depth=1 https://github.com/immortalwrt/homeproxy
+
 # 删除第三方仓库不用的软件
 cd openwrt-packages
 ls | grep -v luci-theme-argon \
@@ -33,7 +37,6 @@ ls | grep -v luci-theme-argon \
    | grep -v adguardhome \
    | grep -v alist \
    | grep -v filebrowser \
-   | grep -v luci-app-homeproxy \
    | grep -v sing-box \
    | xargs  rm -rf
 
