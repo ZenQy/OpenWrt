@@ -22,6 +22,7 @@ echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-xray=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-singbox=y" >> .config
 
 # 添加第三方仓库
 mkdir -p package/community
@@ -29,6 +30,7 @@ cd package/community
 git clone --depth=1 https://github.com/kiddin9/openwrt-packages
 git clone --depth=1 https://github.com/ttimasdf/luci-app-xray
 git clone --depth=1 https://github.com/immortalwrt/homeproxy
+git clone --depth=1 https://github.com/ZenQy/xxxx
 
 # 删除第三方仓库不用的软件
 cd openwrt-packages
