@@ -21,7 +21,6 @@ echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-singbox=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-acme=y" >> .config
 
 # 添加第三方仓库
 mkdir -p package/community
