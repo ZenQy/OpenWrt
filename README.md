@@ -1,6 +1,6 @@
 # OpenWrt
 
-[![OpenWRT](https://img.shields.io/badge/github-lede-blue.svg?style=flat&logo=github)](https://github.com/openwrt/openwrt)
+[![OpenWRT](https://img.shields.io/badge/github-OpenWrt-blue.svg?style=flat&logo=github)](https://github.com/openwrt/openwrt)
 ![GitHub](https://img.shields.io/github/license/ZenQy/Openwrt)
 
 ## 如何使用
