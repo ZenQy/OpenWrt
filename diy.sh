@@ -20,6 +20,8 @@ echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-unblockneteasemusic=y" >> .config
+echo "CONFIG_PACKAGE_UnblockNeteaseMusic=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-singbox=y" >> .config
 
 # 添加第三方仓库
@@ -35,6 +37,8 @@ ls | grep -v luci-theme-argon \
    | grep -v adguardhome \
    | grep -v alist \
    | grep -v filebrowser \
+   | grep -v unblockneteasemusic \
+   | grep -v UnblockNeteaseMusic \
    | grep -v sing-box \
    | xargs  rm -rf
 
@@ -51,4 +55,4 @@ cd ../../base-files/files
 
 # authorized_keys
 mkdir -p etc/dropbear
-echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDby5ETsMVosxG6x7y7siSU8UtTlROYzR183QEEp+lGrDEnfJ6Ozk2aIEEcLbo/MbiG+efdD03h8gwdbfTDytYY+3yPlhVC7XsmzqsAoKD9CYXtU0GyHkaIn8/1l0KK42VYgoi02dA5GDNf0N0b1ly013lmaWjkrwF/3ww6PkjXfzyD7k/TqyitYeJctPJZjLjhZc/OB3nPdZT95XDZ4ArnIDBoJajd2zlf0EwpJJ9ALwYX7gM1cHteV0kzT7WhkK9iLGEQcnQq0IVpVBzG47+t7mwAi/OnN9NAb8bg0PCxX3oesHGQ96mbS0RXvfAqCb4UQqAN2fEVOCSWwQjfGwhb zenqy@linux' > etc/dropbear/authorized_keys
+echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBCm/fzBKSSrwR8taYQURb/0p21tBpk6QCL9JviqUOvj nixos@hp' > etc/dropbear/authorized_keys
