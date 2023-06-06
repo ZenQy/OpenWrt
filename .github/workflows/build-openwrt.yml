@@ -8,6 +8,11 @@ on:
         description: 'Run the build with tmate debugging enabled'
         required: false
         default: false
+      add_plugin:
+        type: boolean
+        description: 'Build with some plugins'
+        required: false
+        default: true
   schedule:
     - cron: 0 20 * * *
 
@@ -80,6 +85,11 @@ jobs:
         cd $OPENWRT_PATH
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+
+    - name: Setup Plugin Tag
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.add_plugin }}
+      run: |
+        echo "ADD_PLUGIN=true" >> $GITHUB_ENV
 
     - name: Load Custom Configuration
       run: |

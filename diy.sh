@@ -15,34 +15,43 @@ sed -i 's/+luci-theme-bootstrap//g' package/feeds/luci/luci-ssl-nginx/Makefile
 rm -rf feeds/packages/net/adguardhome
 rm -rf feeds/luci/themes
 
-# 修改.config
-echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-alist=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-unblockneteasemusic=y" >> .config
-echo "CONFIG_PACKAGE_UnblockNeteaseMusic=y" >> .config
-echo "CONFIG_PACKAGE_luci-app-singbox=y" >> .config
-
 # 添加第三方仓库
 mkdir -p package/community
 cd package/community
 git clone --depth=1 https://github.com/kiddin9/openwrt-packages
-git clone --depth=1 https://github.com/ZenQy/xxxx luci-app-singbox
 
-# 删除第三方仓库不用的软件
-cd openwrt-packages
-ls | grep -v luci-theme-argon \
-   | grep -v luci-app-netdata \
-   | grep -v adguardhome \
-   | grep -v alist \
-   | grep -v filebrowser \
-   | grep -v unblockneteasemusic \
-   | grep -v UnblockNeteaseMusic \
-   | grep -v sing-box \
-   | xargs  rm -rf
+# 保留需要的软件
+if [ $ADD_PLUGIN ] then
 
-cd ../../base-files/files
+   # singbox
+   echo "CONFIG_PACKAGE_luci-app-singbox=y" >> ../../.config
+   git clone --depth=1 https://github.com/ZenQy/xxxx luci-app-singbox
+   # netdata
+   echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
+   mv openwrt-packages/luci-app-netdata ./
+   # adguardhome
+   echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
+   echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
+   mv openwrt-packages/adguardhome ./
+   mv openwrt-packages/luci-app-adguardhome ./
+   # alist
+   echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
+   mv openwrt-packages/alist ./
+   mv openwrt-packages/luci-app-alist ./
+   # filebrowser
+   echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
+   mv openwrt-packages/filebrowser ./
+   mv openwrt-packages/luci-app-filebrowser ./
+   # unblockneteasemusic
+   echo "CONFIG_PACKAGE_luci-app-unblockneteasemusic=y" >> ../../.config
+   mv openwrt-packages/luci-app-unblockneteasemusic ./
+   mv openwrt-packages/UnblockNeteaseMusic ./
+
+fi
+mv openwrt-packages/luci-theme-argon ./
+rm -rf openwrt-packages
+
+cd ../base-files/files
 # 下载clash文件
 # mkdir -p etc/openclash/core
 # CLASH_URL=$(curl -fsSL https://api.github.com/repos/vernesong/OpenClash/contents/dev/premium?ref=core | grep download_url | grep arm64 | awk -F '"' '{print $4}')
