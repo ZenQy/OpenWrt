@@ -87,7 +87,7 @@ jobs:
         ./scripts/feeds install -a
 
     - name: Setup Plugin Tag
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.add_plugin }}
+      if: ${{ github.event_name != 'workflow_dispatch' || inputs.add_plugin }}
       run: |
         echo "ADD_PLUGIN=true" >> $GITHUB_ENV
 

@@ -23,6 +23,8 @@ git clone --depth=1 https://github.com/kiddin9/openwrt-packages
 # 保留需要的软件
 if [ $ADD_PLUGIN ]; then
 
+   # aria2
+   echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
    # singbox
    echo "CONFIG_PACKAGE_luci-app-singbox=y" >> ../../.config
    git clone --depth=1 https://github.com/ZenQy/xxxx luci-app-singbox
