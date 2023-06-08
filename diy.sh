@@ -44,15 +44,6 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
    mv openwrt-packages/filebrowser ./
    mv openwrt-packages/luci-app-filebrowser ./
-   # unblockneteasemusic
-   echo "CONFIG_PACKAGE_luci-app-unblockneteasemusic=y" >> ../../.config
-   mv openwrt-packages/luci-app-unblockneteasemusic ./
-   mv openwrt-packages/UnblockNeteaseMusic ./
-   # xray
-   echo "CONFIG_PACKAGE_luci-app-xray-fw4=y" >> ../../.config
-   echo "CONFIG_PACKAGE_luci-i18n-xray-zh-cn=y" >> ../../.config
-   git clone --depth=1 https://github.com/xiechangan123/luci-i18n-xray-zh-cn
-   git clone --depth=1 https://github.com/yichya/luci-app-xray
 fi
 mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
