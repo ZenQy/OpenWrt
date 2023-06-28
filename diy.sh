@@ -36,6 +36,11 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
    mv openwrt-packages/adguardhome ./
    mv openwrt-packages/luci-app-adguardhome ./
+   # mosdns
+   echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
+   echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
+   mv openwrt-packages/mosdns ./
+   mv openwrt-packages/luci-app-mosdns ./ 
    # alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    mv openwrt-packages/alist ./
@@ -44,6 +49,9 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
    mv openwrt-packages/filebrowser ./
    mv openwrt-packages/luci-app-filebrowser ./
+   # chatgpt
+   echo "CONFIG_PACKAGE_luci-app-chatgpt=y" >> ../../.config
+   git clone --depth=1 https://github.com/sirpdboy/chatgpt-web luci-app-chatgpt
 fi
 mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
