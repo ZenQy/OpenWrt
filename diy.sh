@@ -39,8 +39,9 @@ if [ $ADD_PLUGIN ]; then
    # mosdns
    echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
    echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
+   mv openwrt-packages/luci-app-mosdns ./
    mv openwrt-packages/mosdns ./
-   mv openwrt-packages/luci-app-mosdns ./ 
+   mv openwrt-packages/v2dat ./
    # alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    mv openwrt-packages/alist ./
