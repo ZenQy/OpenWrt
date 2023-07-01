@@ -14,11 +14,12 @@ on:
         required: false
         default: true
   schedule:
-    - cron: 0 20 * * *
+    - cron: 0 20 * * 1
+  push:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: openwrt-22.03
+  REPO_BRANCH: openwrt-23.05
   CONFIG_FILE: openwrt.config
   INIT_FILE: 99-default-settings
   DIY_SCRIPT: diy.sh
