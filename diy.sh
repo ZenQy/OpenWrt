@@ -7,10 +7,9 @@ sed -i 's/192.168.1.1/10.0.0.5/g' package/base-files/files/bin/config_generate
 # 修改时区
 # sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 # 替换默认主题,并移除其他主题依赖
-# sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-sed -i 's/+luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/collections/luci-light/Makefile
-sed -i 's/+luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/collections/luci-nginx/Makefile
-sed -i 's/+luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/collections/luci-ssl-nginx/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-light/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-nginx/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-ssl-nginx/Makefile
 # 删除原仓库软件
 rm -rf feeds/packages/net/adguardhome
 rm -rf feeds/luci/themes
