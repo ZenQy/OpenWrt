@@ -138,7 +138,7 @@ jobs:
       run: |
         cd $OPENWRT_PATH/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET
         cat sha256sums
-        ROOTFS_PATH=openwrt/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/openwrt-$DEVICE_TARGET-$DEVICE_SUBTARGET-default-rootfs.tar.gz
+        ROOTFS_PATH=openwrt/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/openwrt-$DEVICE_TARGET-$DEVICE_SUBTARGET-rootfs.tar.gz
         echo "ROOTFS_PATH=$ROOTFS_PATH" >> $GITHUB_ENV
         cp $OPENWRT_PATH/.config $UPLOAD_PATH/build.config
 
