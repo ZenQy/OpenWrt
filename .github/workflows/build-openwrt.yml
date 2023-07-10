@@ -15,7 +15,6 @@ on:
         default: true
   schedule:
     - cron: 0 20 * * 1
-  push:
 
 env:
   REPO_URL: https://github.com/openwrt/openwrt
