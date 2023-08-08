@@ -24,38 +24,35 @@ if [ $ADD_PLUGIN ]; then
 
    # aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
-   # singbox
-   # echo "CONFIG_PACKAGE_luci-app-singbox=y" >> ../../.config
-   # git clone --depth=1 https://github.com/ZenQy/xxxx luci-app-singbox
    # homeproxy
    echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
    mv openwrt-packages/luci-app-homeproxy ./
    mv openwrt-packages/chinadns-ng ./
-   # # netdata
-   # echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
-   # mv openwrt-packages/luci-app-netdata ./
-   # # adguardhome
-   # echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
-   # echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
-   # mv openwrt-packages/adguardhome ./
-   # mv openwrt-packages/luci-app-adguardhome ./
-   # # mosdns
+   # netdata
+   echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
+   mv openwrt-packages/luci-app-netdata ./
+   # adguardhome
+   echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
+   echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
+   mv openwrt-packages/adguardhome ./
+   mv openwrt-packages/luci-app-adguardhome ./
+   # mosdns
    # echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
    # echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
    # mv openwrt-packages/luci-app-mosdns ./
    # mv openwrt-packages/mosdns ./
    # mv openwrt-packages/v2dat ./
-   # # alist
-   # echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
-   # mv openwrt-packages/alist ./
-   # mv openwrt-packages/luci-app-alist ./
-   # # filebrowser
-   # echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
-   # mv openwrt-packages/filebrowser ./
-   # mv openwrt-packages/luci-app-filebrowser ./
-   # # chatgpt
-   # echo "CONFIG_PACKAGE_luci-app-chatgpt=y" >> ../../.config
-   # git clone --depth=1 https://github.com/sirpdboy/chatgpt-web luci-app-chatgpt
+   # alist
+   echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
+   mv openwrt-packages/alist ./
+   mv openwrt-packages/luci-app-alist ./
+   # filebrowser
+   echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
+   mv openwrt-packages/filebrowser ./
+   mv openwrt-packages/luci-app-filebrowser ./
+   # chatgpt
+   echo "CONFIG_PACKAGE_luci-app-chatgpt=y" >> ../../.config
+   git clone --depth=1 https://github.com/sirpdboy/chatgpt-web luci-app-chatgpt
 fi
 mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
