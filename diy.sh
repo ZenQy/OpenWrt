@@ -50,9 +50,7 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
    mv openwrt-packages/filebrowser ./
    mv openwrt-packages/luci-app-filebrowser ./
-   # chatgpt
-   echo "CONFIG_PACKAGE_luci-app-chatgpt=y" >> ../../.config
-   git clone --depth=1 https://github.com/sirpdboy/chatgpt-web luci-app-chatgpt
+
 fi
 mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
