@@ -13,7 +13,7 @@ uci -q set network.lan.device='eth0'
 uci -q set network.lan.proto='static'
 uci -q set network.lan.ipaddr='10.0.0.5'
 uci -q set network.lan.netmask='255.255.255.0'
-uci -q set network.lan.gateway='10.0.0.11'
+uci -q set network.lan.gateway='10.0.0.1'
 uci -q set network.lan.delegate='0'
 uci -q del network.@device[0]
 uci -q del network.globals.ula_prefix
@@ -30,6 +30,7 @@ uci -q del wireless.default_radio0
 uci commit wireless
 
 uci -q set aria2.main.dir='/mnt/mmcblk2p4/Aria2'
+uci -q set aria2.main.check_certificate='false'
 uci commit aria2
 
 rm -rf /tmp/luci-*

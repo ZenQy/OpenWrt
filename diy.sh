@@ -37,11 +37,11 @@ if [ $ADD_PLUGIN ]; then
    mv openwrt-packages/adguardhome ./
    mv openwrt-packages/luci-app-adguardhome ./
    # mosdns
-   # echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
-   # echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
-   # mv openwrt-packages/luci-app-mosdns ./
-   # mv openwrt-packages/mosdns ./
-   # mv openwrt-packages/v2dat ./
+   echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
+   echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
+   mv openwrt-packages/luci-app-mosdns ./
+   mv openwrt-packages/mosdns ./
+   mv openwrt-packages/v2dat ./
    # alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    mv openwrt-packages/alist ./
@@ -70,4 +70,4 @@ cd ../base-files/files
 
 # authorized_keys
 mkdir -p etc/dropbear
-echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBCm/fzBKSSrwR8taYQURb/0p21tBpk6QCL9JviqUOvj nixos@hp' > etc/dropbear/authorized_keys
+echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBCm/fzBKSSrwR8taYQURb/0p21tBpk6QCL9JviqUOvj' > etc/dropbear/authorized_keys
