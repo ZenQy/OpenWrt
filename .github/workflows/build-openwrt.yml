@@ -156,7 +156,7 @@ jobs:
         wget https://raw.githubusercontent.com/unifreq/openwrt_packit/master/openwrt_flippy.sh
         chmod +x openwrt_flippy.sh
         sed -i "22asource $PACKIT_SCRIPT" openwrt_flippy.sh
-        sed -i '/git clone --depth 1/a\    cd ${SELECT_PACKITPATH}\n    modify_packit\n    cd ..' openwrt_flippy.sh
+        sed -i '/git clone/a\    cd ${SELECT_PACKITPATH}\n    modify_packit\n    cd ..' openwrt_flippy.sh
         ./openwrt_flippy.sh
 
     - name: Upload OpenWrt To Release
