@@ -32,10 +32,10 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
    mv openwrt-packages/luci-app-netdata ./
    # adguardhome
-   echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
-   echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
-   mv openwrt-packages/adguardhome ./
-   mv openwrt-packages/luci-app-adguardhome ./
+   # echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
+   # echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
+   # mv openwrt-packages/adguardhome ./
+   # mv openwrt-packages/luci-app-adguardhome ./
    # mosdns
    echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
    echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
