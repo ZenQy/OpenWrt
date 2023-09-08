@@ -61,13 +61,19 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /etc/mysql /usr/local/lib/android
+        sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android*
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /etc/mysql /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install $(curl -fsSL is.gd/depends_ubuntu_2204)
         sudo -E apt-get -qq install fuse libfuse-dev
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
+        GoPKG=https://go.dev$(curl -fsSL https://go.dev/dl/ | grep /dl/go | grep linux-amd64.tar.gz | head -n 3 | awk 'END{print}' | awk -F '"' '{print $6}')
+        wget $GoPKG
+        sudo tar -C /usr/local -xzf go*.linux-amd64.tar.gz
+        echo "PATH=$PATH:/usr/local/go/bin" >> $GITHUB_ENV
+        go version
 
     - name: Clone Source Code
       run: |
@@ -118,9 +124,17 @@ jobs:
         DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
         echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
 
+    - name: Cache
+      uses: stupidloud/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        prefix: ${{ env.OPENWRT_PATH }}
+
     - name: Generate Firmware
       run: |
         cd $OPENWRT_PATH
+        echo $PATH
+        go version
         mkdir -p files/etc/uci-defaults
         cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
         make -j$(nproc) || make -j1 || make -j1 V=s
