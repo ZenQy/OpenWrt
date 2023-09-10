@@ -57,15 +57,6 @@ mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
 
 cd ../base-files/files
-# 下载clash文件
-# mkdir -p etc/openclash/core
-# CLASH_URL=$(curl -fsSL https://api.github.com/repos/vernesong/OpenClash/contents/dev/premium?ref=core | grep download_url | grep arm64 | awk -F '"' '{print $4}')
-# GEOIP_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
-# # GEOSITE_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-# wget -qO- $CLASH_URL | gunzip -c > etc/openclash/core/clash_tun
-# wget -qO- $GEOIP_URL > etc/openclash/GeoIP.dat
-# # wget -qO- $GEOSITE_URL > etc/openclash/GeoSite.dat
-# chmod +x etc/openclash/core/clash*
 
 # authorized_keys
 mkdir -p etc/dropbear
