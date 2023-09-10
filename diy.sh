@@ -22,14 +22,14 @@ git clone --depth=1 https://github.com/kiddin9/openwrt-packages
 # 保留需要的软件
 if [ $ADD_PLUGIN ]; then
 
-   # aria2
+   echo aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
-   # daed
+   echo daed
    echo "CONFIG_PACKAGE_luci-app-daed=y" >> ../../.config
    mv openwrt-packages/luci-app-daed ./
    mv openwrt-packages/daed ./
    mv openwrt-packages/v2ray-geodata ./
-   # netdata
+   echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
    mv openwrt-packages/luci-app-netdata ./
    # adguardhome
@@ -43,15 +43,16 @@ if [ $ADD_PLUGIN ]; then
    # mv openwrt-packages/luci-app-mosdns ./
    # mv openwrt-packages/mosdns ./
    # mv openwrt-packages/v2dat ./
-   # alist
+   echo alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    mv openwrt-packages/alist ./
    mv openwrt-packages/luci-app-alist ./
-   # filebrowser
+   echo filebrowser
    echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
    mv openwrt-packages/filebrowser ./
    mv openwrt-packages/luci-app-filebrowser ./
-
+   echo transmission
+   echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
 fi
 mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
