@@ -49,15 +49,15 @@ jobs:
 
       - name: Custom Configuration
         run: |
-        kernel_version=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
-        echo "kernel_version=$kernel_version" >> $GITHUB_ENV
-        cd $GITHUB_WORKSPACE/$kernel_config
-        for f in $(ls); do
-          echo CONFIG_DEVEL=y >> $f
-          echo CONFIG_BPF_TOOLCHAIN_HOST=y >> $f
-          echo CONFIG_KERNEL_CGROUP_BPF=y >> $f
-          echo CONFIG_KERNEL_XDP_SOCKETS=y >> $f
-        done
+          kernel_version=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
+          echo "kernel_version=$kernel_version" >> $GITHUB_ENV
+          cd $GITHUB_WORKSPACE/$kernel_config
+          for f in $(ls); do
+            echo CONFIG_DEVEL=y >> $f
+            echo CONFIG_BPF_TOOLCHAIN_HOST=y >> $f
+            echo CONFIG_KERNEL_CGROUP_BPF=y >> $f
+            echo CONFIG_KERNEL_XDP_SOCKETS=y >> $f
+          done
 
       - name: Compile the kernel [ ${{ env.kernel_version }} ]
         uses: ophub/amlogic-s9xxx-armbian@main
@@ -83,11 +83,11 @@ jobs:
           body: |
             - 这是最新`稳定版`内核，增加一些自定义配置。
 
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.1
-      if: success()
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.2.1
+        if: success()
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
