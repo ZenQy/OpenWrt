@@ -1,4 +1,4 @@
-name: Compile release general kernel
+name: Compile kernel
 
 on:
   repository_dispatch:
@@ -52,6 +52,7 @@ jobs:
         run: |
           kernel_version=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
           echo "kernel_version=$kernel_version" >> $GITHUB_ENV
+          echo "kernel_config_file=$GITHUB_WORKSPACE/.config" >> $GITHUB_ENV
           cd $GITHUB_WORKSPACE/$kernel_config
           for f in $(ls); do
             echo CONFIG_DEVEL=y >> $f
@@ -77,8 +78,8 @@ jobs:
         uses: ncipollo/release-action@main
         if: success()
         with:
-          tag: kernel
-          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
+          tag: kernel_stable
+          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*,${{ env.kernel_config_file }}
           allowUpdates: true
           token: ${{ secrets.RELEASES_TOKEN }}
           body: |

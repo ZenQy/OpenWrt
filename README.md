@@ -34,8 +34,8 @@
 
 ## 感激 
 
- - [暴躁老哥](https://github.com/breakings/OpenWrt)
- - [mingxiaoyu](https://github.com/mingxiaoyu/N1Openwrt)
+ - [smith1998](https://github.com/ophub/kernel)
+ - [flippy](https://github.com/unifreq/openwrt_packit)
 
 ## License
 
