@@ -83,7 +83,7 @@ jobs:
         git clone --depth=1 -b $REPO_BRANCH $REPO_URL openwrt
         cd openwrt
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
-        KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
+        KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ZenQy/OpenWrt/releases/tags/kernel | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
         echo "KERNEL_VERSION_NAME=$KERNEL_VERSION_NAME" >> $GITHUB_ENV
 
     - name: Install Feeds
