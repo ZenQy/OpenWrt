@@ -78,7 +78,7 @@ jobs:
         if: success()
         with:
           tag: kernel
-          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*,${{ env.GITHUB_WORKSPACE/.config }}
+          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
           allowUpdates: true
           token: ${{ secrets.RELEASES_TOKEN }}
           body: |
