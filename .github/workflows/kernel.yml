@@ -27,7 +27,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-        repository: ophub/kernel
+        with:
+          repository: ophub/kernel
 
       - name: Initialization environment
         id: init
