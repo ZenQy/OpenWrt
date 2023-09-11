@@ -55,10 +55,15 @@ jobs:
           echo "kernel_config_file=$GITHUB_WORKSPACE/.config" >> $GITHUB_ENV
           cd $GITHUB_WORKSPACE/$kernel_config
           for f in $(ls); do
-            echo CONFIG_DEVEL=y >> $f
-            echo CONFIG_BPF_TOOLCHAIN_HOST=y >> $f
-            echo CONFIG_KERNEL_CGROUP_BPF=y >> $f
-            echo CONFIG_KERNEL_XDP_SOCKETS=y >> $f
+            echo "CONFIG_DEVEL=y" >> $f
+            echo "CONFIG_BPF_TOOLCHAIN_HOST=y" >> $f
+            echo "# CONFIG_BPF_TOOLCHAIN_NONE is not set" >> $f 
+            echo "CONFIG_KERNEL_BPF_EVENTS=y" >> $f
+            echo "CONFIG_KERNEL_CGROUP_BPF=y" >> $f
+            echo "CONFIG_KERNEL_DEBUG_INFO=y" >> $f
+            echo "CONFIG_KERNEL_DEBUG_INFO_BTF=y" >> $f
+            echo "# CONFIG_KERNEL_DEBUG_INFO_REDUCED is not set" >> $f
+            echo "CONFIG_KERNEL_XDP_SOCKETS=y" >> $f
           done
 
       - name: Compile the kernel [ ${{ env.kernel_version }} ]
