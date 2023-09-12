@@ -29,6 +29,8 @@ uci commit system
 uci -q del wireless.default_radio0
 uci commit wireless
 
+uci -q set aria2.main.enabled='1'
+uci -q set aria2.main.user='root'
 uci -q set aria2.main.dir='/mnt/mmcblk2p4/Aria2'
 uci -q set aria2.main.check_certificate='false'
 uci commit aria2

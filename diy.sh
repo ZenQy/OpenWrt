@@ -24,11 +24,10 @@ if [ $ADD_PLUGIN ]; then
 
    echo aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
-   echo daed
-   echo "CONFIG_PACKAGE_luci-app-daed=y" >> ../../.config
-   mv openwrt-packages/luci-app-daed ./
-   mv openwrt-packages/daed ./
-   mv openwrt-packages/v2ray-geodata ./
+   echo homeproxy
+   echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
+   mv openwrt-packages/luci-app-homeproxy ./
+   mv openwrt-packages/chinadns-ng ./
    echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
    mv openwrt-packages/luci-app-netdata ./
@@ -37,12 +36,12 @@ if [ $ADD_PLUGIN ]; then
    # echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
    # mv openwrt-packages/adguardhome ./
    # mv openwrt-packages/luci-app-adguardhome ./
-   # mosdns
-   # echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
-   # echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
-   # mv openwrt-packages/luci-app-mosdns ./
-   # mv openwrt-packages/mosdns ./
-   # mv openwrt-packages/v2dat ./
+   ECHO mosdns
+   echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
+   echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
+   mv openwrt-packages/luci-app-mosdns ./
+   mv openwrt-packages/mosdns ./
+   mv openwrt-packages/v2dat ./
    echo alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    mv openwrt-packages/alist ./
