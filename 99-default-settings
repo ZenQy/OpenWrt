@@ -31,9 +31,25 @@ uci commit wireless
 
 uci -q set aria2.main.enabled='1'
 uci -q set aria2.main.user='root'
-uci -q set aria2.main.dir='/mnt/mmcblk2p4/Aria2'
+uci -q set aria2.main.dir='/mnt/sda1/aria2'
 uci -q set aria2.main.check_certificate='false'
 uci commit aria2
+
+uci -q set transmission.@transmission[0].enabled='1'
+uci -q set transmission.@transmission[0].user='root'
+uci -q set transmission.@transmission[0].group='root' 
+uci -q set transmission.@transmission[0].download_dir='/mnt/sda1/transmission'
+uci -q set transmission.@transmission[0].cache_size_mb='500'
+uci -q set transmission.@transmission[0].encryption='0'
+uci -q set transmission.@transmission[0].utp_enabled='false'
+uci -q set transmission.@transmission[0].dht_enabled='false'
+uci commit transmission
+
+uci -q set alist.@alist[0].enabled='1'
+uci commit alist
+
+uci -q set filebrowser.config.enabled='1'
+uci commit filebrowser
 
 rm -rf /tmp/luci-*
 
