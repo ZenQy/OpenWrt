@@ -33,6 +33,7 @@ uci -q set aria2.main.enabled='1'
 uci -q set aria2.main.user='root'
 uci -q set aria2.main.dir='/mnt/sda1/aria2'
 uci -q set aria2.main.check_certificate='false'
+uci -q del aria2.main.extra_settings
 uci commit aria2
 
 uci -q set transmission.@transmission[0].enabled='1'
@@ -50,6 +51,18 @@ uci commit alist
 
 uci -q set filebrowser.config.enabled='1'
 uci commit filebrowser
+
+uci -q set mosdns.config.enabled='1'
+uci -q set mosdns.config.listen_port='53'
+uci -q set mosdns.config.custom_local_dns='1'
+uci -q set mosdns.config.local_dns='119.29.29.29'
+uci -q set mosdns.config.remote_dns='tls://8.8.8.8'
+uci -q set mosdns.config.bootstrap_dns='114.114.114.114'
+uci -q set mosdns.config.listen_port_api='9095'
+uci -q set mosdns.config.geo_auto_update='1'
+uci -q set mosdns.config.geo_update_week_time='3'
+uci -q set mosdns.config.geo_update_day_time='2'
+uci commit mosdns
 
 rm -rf /tmp/luci-*
 

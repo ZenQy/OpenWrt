@@ -28,31 +28,47 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
    mv openwrt-packages/luci-app-homeproxy ./
    mv openwrt-packages/chinadns-ng ./
+
    echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
    mv openwrt-packages/luci-app-netdata ./
+
    # adguardhome
    # echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
    # echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
    # mv openwrt-packages/adguardhome ./
    # mv openwrt-packages/luci-app-adguardhome ./
-   ECHO mosdns
+
+   echo mosdns
    echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
    echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
    mv openwrt-packages/luci-app-mosdns ./
    mv openwrt-packages/mosdns ./
    mv openwrt-packages/v2dat ./
+
    echo alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    mv openwrt-packages/alist ./
    mv openwrt-packages/luci-app-alist ./
+
    echo filebrowser
    echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
    mv openwrt-packages/filebrowser ./
    mv openwrt-packages/luci-app-filebrowser ./
+
    echo transmission
    echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
    echo "CONFIG_PACKAGE_transmission-web-control=y" >> ../../.config
+
+   echo turboacc
+   echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> ../../.config
+   echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE=y" >> ../../.config
+   echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE_CM=y" >> ../../.config
+   echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >> ../../.config
+   mv openwrt-packages/luci-app-turboacc ./
+   mv openwrt-packages/dnsforwarder ./
+   mv openwrt-packages/shortcut-fe ./
+   git clone --depth=1 https://github.com/op4packages/pdnsd-alt
 fi
 mv openwrt-packages/luci-theme-argon ./
 rm -rf openwrt-packages
