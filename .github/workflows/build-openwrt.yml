@@ -68,6 +68,10 @@ jobs:
         sudo -E apt -y autoremove --purge
         sudo -E apt -y clean
         sudo timedatectl set-timezone "$TZ"
+        GoPKG=https://go.dev$(curl -fsSL https://go.dev/dl/ | grep /dl/go | grep linux-amd64.tar.gz | head -n 3 | awk 'END{print}' | awk -F '"' '{print $6}')
+        wget $GoPKG
+        sudo tar -C /usr/local -xzf go*.linux-amd64.tar.gz
+        echo "PATH=$PATH:/usr/local/go/bin" >> $GITHUB_ENV
 
     - name: Clone Source Code
       run: |
