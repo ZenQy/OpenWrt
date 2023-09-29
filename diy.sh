@@ -11,6 +11,7 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-light
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-nginx/Makefile
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-ssl-nginx/Makefile
 # 删除原仓库软件
+rm -rf feeds/packages/net/adguardhome
 rm -rf feeds/luci/themes
 
 # 添加第三方仓库
@@ -36,6 +37,7 @@ if [ $ADD_PLUGIN ]; then
    echo adguardhome
    echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
    echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
+   mv openwrt-packages/adguardhome ./
    mv openwrt-packages/luci-app-adguardhome ./
 
    # echo mosdns
