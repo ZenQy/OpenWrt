@@ -38,8 +38,9 @@ if [ $ADD_PLUGIN ]; then
    mv openwrt-packages/luci-app-adguardhome ./
    wget https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_arm64.tar.gz
    tar -xzvf AdGuardHome_linux_arm64.tar.gz
+   mkdir -p ../base-files/files/usr/bin
    mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
-   rm -rf AdGuardHome
+   rm -rf AdGuardHome*
 
    # echo mosdns
    # echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
