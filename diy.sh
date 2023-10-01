@@ -16,7 +16,7 @@ rm -rf feeds/luci/themes
 # 添加第三方仓库
 mkdir -p package/community
 cd package/community
-git clone --depth=1 https://github.com/kiddin9/openwrt-packages
+git clone -b master --depth=1 https://github.com/kiddin9/openwrt-packages
 
 # 保留需要的软件
 if [ $ADD_PLUGIN ]; then
@@ -26,7 +26,7 @@ if [ $ADD_PLUGIN ]; then
 
    echo homeproxy
    echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
-   mv openwrt-packages/luci-app-homeproxy ./
+   git clone -b master --depth=1 https://github.com/immortalwrt/homeproxy
    mv openwrt-packages/chinadns-ng ./
 
    echo netdata
@@ -35,11 +35,11 @@ if [ $ADD_PLUGIN ]; then
 
    echo adguardhome
    echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
-   echo "CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y" >> ../../.config
-   # mv openwrt-packages/adguardhome ./
-   # rm -rf feeds/packages/net/adguardhome
-   cp openwrt-packages/adguardhome/patches/* feeds/packages/net/adguardhome/patches
    mv openwrt-packages/luci-app-adguardhome ./
+   wget https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_arm64.tar.gz
+   tar -xzvf AdGuardHome_linux_arm64.tar.gz
+   mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
+   rm -rf AdGuardHome
 
    # echo mosdns
    # echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
