@@ -37,6 +37,7 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
    echo "# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set" >> ../../.config
    mv openwrt-packages/luci-app-adguardhome ./
+   sed -i 's/port: 1745/port: 53/g' luci-app-adguardhome/root/usr/share/AdGuardHome/AdGuardHome_template.yaml
    wget https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_arm64.tar.gz
    tar -xzvf AdGuardHome_linux_arm64.tar.gz
    mkdir -p ../base-files/files/usr/bin

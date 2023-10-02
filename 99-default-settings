@@ -29,33 +29,48 @@ uci commit system
 uci -q del wireless.default_radio0
 uci commit wireless
 
-uci -q set aria2.main.enabled='1'
-uci -q set aria2.main.user='root'
-uci -q set aria2.main.dir='/mnt/sda1/aria2'
-uci -q set aria2.main.check_certificate='false'
-uci -q del aria2.main.extra_settings
-uci commit aria2
+if [[ $(uci -q show aria2 | wc -l)>0 ]]; then
+  uci -q set aria2.main.enabled='1'
+  uci -q set aria2.main.user='root'
+  uci -q set aria2.main.dir='/mnt/sda1/aria2'
+  uci -q set aria2.main.check_certificate='false'
+  uci -q del aria2.main.extra_settings
+  uci commit aria2
+fi
 
-uci -q set transmission.@transmission[0].enabled='1'
-uci -q set transmission.@transmission[0].user='root'
-uci -q set transmission.@transmission[0].group='root' 
-uci -q set transmission.@transmission[0].download_dir='/mnt/sda1/transmission'
-uci -q set transmission.@transmission[0].cache_size_mb='500'
-uci -q set transmission.@transmission[0].encryption='0'
-uci -q set transmission.@transmission[0].utp_enabled='false'
-uci -q set transmission.@transmission[0].dht_enabled='false'
-uci commit transmission
+if [[ $(uci -q show transmission | wc -l)>0 ]]; then
+  uci -q set transmission.@transmission[0].enabled='1'
+  uci -q set transmission.@transmission[0].user='root'
+  uci -q set transmission.@transmission[0].group='root' 
+  uci -q set transmission.@transmission[0].download_dir='/mnt/sda1/transmission'
+  uci -q set transmission.@transmission[0].cache_size_mb='500'
+  uci -q set transmission.@transmission[0].encryption='0'
+  uci -q set transmission.@transmission[0].utp_enabled='false'
+  uci -q set transmission.@transmission[0].dht_enabled='false'
+  uci commit transmission
+fi
 
-uci -q set alist.@alist[0].enabled='1'
-uci commit alist
+if [[ $(uci -q show alist | wc -l)>0 ]]; then
+  uci -q set alist.@alist[0].enabled='1'
+  uci commit alist
+fi
 
-uci -q set filebrowser.config.enabled='1'
-uci commit filebrowser
+if [[ $(uci -q show filebrowser | wc -l)>0 ]]; then
+  uci -q set filebrowser.config.enabled='1'
+  uci commit filebrowser
+fi
 
-uci -q set turboacc.config.sfe_flow='1'
-uci -q set turboacc.config.bbr_cca='1'
-uci -q del turboacc.config.sw_flow
-uci commit turboacc
+if [[ $(uci -q show turboacc | wc -l)>0 ]]; then
+  uci -q set turboacc.config.sfe_flow='1'
+  uci -q set turboacc.config.bbr_cca='1'
+  uci -q del turboacc.config.sw_flow
+  uci commit turboacc
+fi
+
+if [[ $(uci -q show AdGuardHome | wc -l)>0 ]]; then
+  uci -q set AdGuardHome.AdGuardHome.enabled='1'
+  uci commit AdGuardHome
+fi
 
 rm -rf /tmp/luci-*
 
