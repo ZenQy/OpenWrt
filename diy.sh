@@ -10,8 +10,6 @@ sed -i 's/192.168.1.1/10.0.0.5/g' package/base-files/files/bin/config_generate
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-light/Makefile
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-nginx/Makefile
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-ssl-nginx/Makefile
-# 删除原仓库软件
-rm -rf feeds/luci/themes
 
 # 添加第三方仓库
 mkdir -p package/community
@@ -28,7 +26,9 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
    git clone -b master --depth=1 https://github.com/immortalwrt/homeproxy
    mv openwrt-packages/chinadns-ng ./
-
+   mv openwrt-packages/sing-box ./
+   rm -rf ../../feeds/packages/net/sing-box
+   
    echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
    mv openwrt-packages/luci-app-netdata ./
@@ -68,14 +68,16 @@ if [ $ADD_PLUGIN ]; then
    echo turboacc
    echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> ../../.config
    echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE=y" >> ../../.config
-   # echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE_CM=y" >> ../../.config
+   echo "# CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE_CM is not set" >> ../../.config
    echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >> ../../.config
    mv openwrt-packages/luci-app-turboacc ./
    mv openwrt-packages/dnsforwarder ./
    mv openwrt-packages/shortcut-fe ./
    git clone --depth=1 https://github.com/op4packages/pdnsd-alt
 fi
+
 mv openwrt-packages/luci-theme-argon ./
+rm -rf ../../feeds/luci/themes
 rm -rf openwrt-packages
 
 cd ../base-files/files
