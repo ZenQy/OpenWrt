@@ -53,10 +53,25 @@ jobs:
           cd $GITHUB_WORKSPACE
           kernel_version=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
           echo "kernel_version=$kernel_version" >> $GITHUB_ENV
-          wget https://raw.githubusercontent.com/ZenQy/OpenWrt/main/kernel.config
+          # wget https://raw.githubusercontent.com/ZenQy/OpenWrt/main/kernel.config
           cd $kernel_config
-          rm *
-          mv $GITHUB_WORKSPACE/kernel.config config-$(echo $kernel_version | awk -F '.' '{print $1"."$2}')
+          file=config-$(echo $kernel_version | awk -F '.' '{print $1"."$2}')
+          # Enable BTF.
+          sed -i '/CONFIG_DEBUG_INFO/d;/CONFIG_RING_BUFFER/d;/CONFIG_TRACING/d;/CONFIG_STACKTRACE/d;/CONFIG_NOP_TRACER/d;/CONFIG_BINARY_PRINTF/d;/CONFIG_EVENT_TRACING/d;/CONFIG_TRACE_CLOCK/d;/CONFIG_TASKS_RCU/d' $file
+          echo "CONFIG_DEBUG_INFO=y
+          CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+          CONFIG_DEBUG_INFO_COMPRESSED_ZLIB=y
+          CONFIG_DEBUG_INFO_BTF=y
+          CONFIG_KPROBE_EVENTS=y
+          CONFIG_BPF_EVENTS=y
+          CONFIG_RING_BUFFER=y
+          CONFIG_TRACING=y
+          CONFIG_STACKTRACE=y
+          CONFIG_NOP_TRACER=y
+          CONFIG_BINARY_PRINTF=y
+          CONFIG_EVENT_TRACING=y
+          CONFIG_TRACE_CLOCK=y
+          CONFIG_TASKS_RCU=y" >> $file
 
       - name: Compile the kernel [ ${{ env.kernel_version }} ]
         uses: ophub/amlogic-s9xxx-armbian@main
