@@ -22,10 +22,10 @@ if [ $ADD_PLUGIN ]; then
    echo aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
 
-   echo v2raya
-   echo "CONFIG_PACKAGE_luci-app-v2raya=y" >> ../../.config
-   echo "CONFIG_PACKAGE_xray-core=y" >> ../../.config
-   mv openwrt-packages/luci-app-v2raya ./
+   echo homeproxy
+   echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
+   git clone --depth=1 https://github.com/douglarek/luci-app-homeproxy
+   mv openwrt-packages/sing-box ./
 
    echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
@@ -41,13 +41,6 @@ if [ $ADD_PLUGIN ]; then
    mkdir -p ../base-files/files/usr/bin
    mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
    rm -rf AdGuardHome*
-
-   # echo mosdns
-   # echo "CONFIG_PACKAGE_luci-app-mosdns=y" >> ../../.config
-   # echo "CONFIG_PACKAGE_mosdns=y" >> ../../.config
-   # mv openwrt-packages/luci-app-mosdns ./
-   # mv openwrt-packages/mosdns ./
-   # mv openwrt-packages/v2dat ./
 
    echo alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
