@@ -65,6 +65,7 @@ if [ $ADD_PLUGIN ]; then
    mv openwrt-packages/dnsforwarder ./
    mv openwrt-packages/shortcut-fe ./
    git clone --depth=1 https://github.com/op4packages/pdnsd-alt
+
 fi
 
 mv openwrt-packages/luci-theme-argon ./
