@@ -21,6 +21,9 @@ if [ $ADD_PLUGIN ]; then
 
    echo aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
+   # 最新版aria2无法运行，改用旧版
+   rm -rf ../../feeds/packages/net/aria2
+   mv openwrt-packages/aria2 ./
 
    echo homeproxy
    echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
@@ -52,9 +55,9 @@ if [ $ADD_PLUGIN ]; then
    mv openwrt-packages/filebrowser ./
    mv openwrt-packages/luci-app-filebrowser ./
 
-   echo transmission
-   echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
-   echo "CONFIG_PACKAGE_transmission-web-control=y" >> ../../.config
+   # echo transmission
+   # echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
+   # echo "CONFIG_PACKAGE_transmission-web-control=y" >> ../../.config
 
    echo turboacc
    echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> ../../.config
