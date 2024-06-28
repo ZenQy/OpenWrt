@@ -22,8 +22,8 @@ if [ $ADD_PLUGIN ]; then
    echo aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
    # 最新版aria2无法运行，改用旧版
-   rm -rf ../../feeds/packages/net/aria2
-   mv openwrt-packages/aria2 ./
+   # rm -rf ../../feeds/packages/net/aria2
+   # mv openwrt-packages/aria2 ./
 
    # echo homeproxy
    # echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
