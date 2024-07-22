@@ -181,7 +181,7 @@ jobs:
           openwrt-update-amlogic
         
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.1
+      uses: dev-drprasad/delete-older-releases@v0.3.4
       if: success()
       with:
         keep_latest: 3
