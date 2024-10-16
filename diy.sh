@@ -14,7 +14,7 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' package/feeds/luci/luci-ssl-n
 # 添加第三方仓库
 mkdir -p package/community
 cd package/community
-git clone -b master --depth=1 https://github.com/kiddin9/openwrt-packages
+git clone --depth=1 https://github.com/kiddin9/kwrt-packages
 
 # 保留需要的软件
 if [ $ADD_PLUGIN ]; then
