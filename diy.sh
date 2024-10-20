@@ -35,9 +35,9 @@ if [ $ADD_PLUGIN ]; then
    # mv kwrt-packages/luci-app-openclash ./
 
    # echo mihomo
-   echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
-   mv kwrt-packages/mihomo ./
-   mv kwrt-packages/luci-app-mihomo ./
+   # echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
+   # mv kwrt-packages/mihomo ./
+   # mv kwrt-packages/luci-app-mihomo ./
 
    echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
@@ -54,15 +54,15 @@ if [ $ADD_PLUGIN ]; then
    mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
    rm -rf AdGuardHome*
 
-   echo alist
-   echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
-   mv kwrt-packages/alist ./
-   mv kwrt-packages/luci-app-alist ./
+   # echo alist
+   # echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
+   # mv kwrt-packages/alist ./
+   # mv kwrt-packages/luci-app-alist ./
 
-   echo filebrowser
-   echo "CONFIG_PACKAGE_luci-app-filebrowser-go=y" >> ../../.config
-   mv kwrt-packages/filebrowser ./
-   mv kwrt-packages/luci-app-filebrowser-go ./
+   # echo filebrowser
+   # echo "CONFIG_PACKAGE_luci-app-filebrowser-go=y" >> ../../.config
+   # mv kwrt-packages/filebrowser ./
+   # mv kwrt-packages/luci-app-filebrowser-go ./
 
    # echo transmission
    # echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
