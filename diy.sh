@@ -43,16 +43,16 @@ if [ $ADD_PLUGIN ]; then
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
    mv kwrt-packages/luci-app-netdata ./
 
-   # echo adguardhome
-   # echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
-   # echo "# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set" >> ../../.config
-   # mv kwrt-packages/luci-app-adguardhome ./
-   # sed -i 's/port: 1745/port: 53/g' luci-app-adguardhome/root/usr/share/AdGuardHome/AdGuardHome_template.yaml
-   # wget https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_arm64.tar.gz
-   # tar -xzvf AdGuardHome_linux_arm64.tar.gz
-   # mkdir -p ../base-files/files/usr/bin
-   # mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
-   # rm -rf AdGuardHome*
+   echo adguardhome
+   echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
+   echo "# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set" >> ../../.config
+   mv kwrt-packages/luci-app-adguardhome ./
+   sed -i 's/port: 1745/port: 53/g' luci-app-adguardhome/root/usr/share/AdGuardHome/AdGuardHome_template.yaml
+   wget https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_arm64.tar.gz
+   tar -xzvf AdGuardHome_linux_arm64.tar.gz
+   mkdir -p ../base-files/files/usr/bin
+   mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
+   rm -rf AdGuardHome*
 
    echo alist
    echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
@@ -60,13 +60,19 @@ if [ $ADD_PLUGIN ]; then
    mv kwrt-packages/luci-app-alist ./
 
    echo filebrowser
-   echo "CONFIG_PACKAGE_luci-app-filebrowser=y" >> ../../.config
+   echo "CONFIG_PACKAGE_luci-app-filebrowser-go=y" >> ../../.config
    mv kwrt-packages/filebrowser ./
-   mv kwrt-packages/luci-app-filebrowser ./
+   mv kwrt-packages/luci-app-filebrowser-go ./
 
    # echo transmission
    # echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
    # echo "CONFIG_PACKAGE_transmission-web-control=y" >> ../../.config
+
+   echo nezha
+   echo "CONFIG_PACKAGE_luci-app-nezha-agent=y" >> ../../.config
+   echo "CONFIG_PACKAGE_nezha-agent=y" >> ../../.config 
+   mv kwrt-packages/luci-app-nezha ./
+   mv kwrt-packages/openwrt-nezha ./
 
    echo turboacc
    echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> ../../.config
@@ -74,9 +80,9 @@ if [ $ADD_PLUGIN ]; then
    echo "# CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE_CM is not set" >> ../../.config
    echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >> ../../.config
    mv kwrt-packages/luci-app-turboacc ./
-   mv kwrt-packages/dnsforwarder ./
    mv kwrt-packages/shortcut-fe ./
-   git clone --depth=1 https://github.com/op4packages/pdnsd-alt
+   mv kwrt-packages/dnsforwarder ./
+   mv kwrt-packages/pdnsd-alt ./
 
 fi
 
