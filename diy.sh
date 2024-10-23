@@ -59,11 +59,6 @@ if [ $ADD_PLUGIN ]; then
    mv kwrt-packages/filebrowser ./
    mv kwrt-packages/luci-app-filebrowser-go ./
 
-   echo webd
-   echo "CONFIG_PACKAGE_luci-app-webd=y" >> ../../.config
-   mv kwrt-packages/webd ./
-   mv kwrt-packages/luci-app-webd ./
-
    # echo transmission
    # echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
    # echo "CONFIG_PACKAGE_transmission-web-control=y" >> ../../.config
