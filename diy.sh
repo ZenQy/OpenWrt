@@ -41,28 +41,28 @@ if [ $ADD_PLUGIN ]; then
 
    echo netdata
    echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
+   mv kwrt-packages/netdata ./
    mv kwrt-packages/luci-app-netdata ./
+   rm -rf ../../feeds/packages/admin/netdata
 
    echo adguardhome
    echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
-   echo "# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set" >> ../../.config
-   mv kwrt-packages/luci-app-adguardhome ./
    sed -i 's/port: 1745/port: 53/g' luci-app-adguardhome/root/usr/share/AdGuardHome/AdGuardHome_template.yaml
-   # wget https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_arm64.tar.gz
-   # tar -xzvf AdGuardHome_linux_arm64.tar.gz
-   # mkdir -p ../base-files/files/usr/bin
-   # mv AdGuardHome/AdGuardHome ../base-files/files/usr/bin
-   # rm -rf AdGuardHome*
 
    # echo alist
    # echo "CONFIG_PACKAGE_luci-app-alist=y" >> ../../.config
    # mv kwrt-packages/alist ./
    # mv kwrt-packages/luci-app-alist ./
 
-   # echo filebrowser
-   # echo "CONFIG_PACKAGE_luci-app-filebrowser-go=y" >> ../../.config
-   # mv kwrt-packages/filebrowser ./
-   # mv kwrt-packages/luci-app-filebrowser-go ./
+   echo filebrowser
+   echo "CONFIG_PACKAGE_luci-app-filebrowser-go=y" >> ../../.config
+   mv kwrt-packages/filebrowser ./
+   mv kwrt-packages/luci-app-filebrowser-go ./
+
+   echo webd
+   echo "CONFIG_PACKAGE_luci-app-webd=y" >> ../../.config
+   mv kwrt-packages/webd ./
+   mv kwrt-packages/luci-app-webd ./
 
    # echo transmission
    # echo "CONFIG_PACKAGE_luci-app-transmission=y" >> ../../.config
@@ -70,18 +70,16 @@ if [ $ADD_PLUGIN ]; then
 
    echo nezha
    echo "CONFIG_PACKAGE_luci-app-nezha-agent=y" >> ../../.config
-   echo "CONFIG_PACKAGE_nezha-agent=y" >> ../../.config 
-   mv kwrt-packages/luci-app-nezha ./
    mv kwrt-packages/openwrt-nezha ./
+   mv kwrt-packages/luci-app-nezha ./
 
    echo turboacc
    echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> ../../.config
-   echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE=y" >> ../../.config
-   echo "# CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE_CM is not set" >> ../../.config
-   echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >> ../../.config
+   # echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE=y" >> ../../.config
+   # echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >> ../../.config
    mv kwrt-packages/luci-app-turboacc ./
    mv kwrt-packages/shortcut-fe ./
-   mv kwrt-packages/dnsforwarder ./
+   # mv kwrt-packages/dnsforwarder ./
    mv kwrt-packages/pdnsd-alt ./
 
 fi
