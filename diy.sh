@@ -34,16 +34,16 @@ if [ $ADD_PLUGIN ]; then
    # echo "CONFIG_PACKAGE_luci-app-openclash=y" >> ../../.config
    # mv kwrt-packages/luci-app-openclash ./
 
-   # echo mihomo
-   # echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
-   # mv kwrt-packages/mihomo ./
-   # mv kwrt-packages/luci-app-mihomo ./
+   echo mihomo
+   echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
+   mv kwrt-packages/mihomo ./
+   mv kwrt-packages/luci-app-mihomo ./
 
-   echo netdata
-   echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
-   mv kwrt-packages/netdata ./
-   mv kwrt-packages/luci-app-netdata ./
-   rm -rf ../../feeds/packages/admin/netdata
+   # echo netdata
+   # echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
+   # mv kwrt-packages/netdata ./
+   # mv kwrt-packages/luci-app-netdata ./
+   # rm -rf ../../feeds/packages/admin/netdata
 
    echo adguardhome
    echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
