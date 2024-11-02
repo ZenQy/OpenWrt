@@ -25,19 +25,19 @@ if [ $ADD_PLUGIN ]; then
    # rm -rf ../../feeds/packages/net/aria2
    # mv kwrt-packages/aria2 ./
 
-   # echo homeproxy
-   # echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
-   # mv kwrt-packages/luci-app-homeproxy ./
-   # mv kwrt-packages/sing-box ./
+   echo homeproxy
+   echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
+   mv kwrt-packages/luci-app-homeproxy ./
+   mv kwrt-packages/sing-box ./
 
    # echo openclash
    # echo "CONFIG_PACKAGE_luci-app-openclash=y" >> ../../.config
    # mv kwrt-packages/luci-app-openclash ./
 
-   echo mihomo
-   echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
-   mv kwrt-packages/mihomo ./
-   mv kwrt-packages/luci-app-mihomo ./
+   # echo mihomo
+   # echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
+   # mv kwrt-packages/mihomo ./
+   # mv kwrt-packages/luci-app-mihomo ./
 
    # echo netdata
    # echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
@@ -47,6 +47,7 @@ if [ $ADD_PLUGIN ]; then
 
    echo adguardhome
    echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> ../../.config
+   mv kwrt-packages/luci-app-adguardhome ./
    sed -i 's/port: 1745/port: 53/g' luci-app-adguardhome/root/usr/share/AdGuardHome/AdGuardHome_template.yaml
 
    # echo alist
