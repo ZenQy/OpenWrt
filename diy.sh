@@ -22,22 +22,20 @@ if [ $ADD_PLUGIN ]; then
    echo aria2
    echo "CONFIG_PACKAGE_luci-app-aria2=y" >> ../../.config
    # 最新版aria2无法运行，改用旧版
-   # rm -rf ../../feeds/packages/net/aria2
-   # mv kwrt-packages/aria2 ./
+   rm -rf ../../feeds/packages/net/aria2
+   mv kwrt-packages/aria2 ./
 
-   echo homeproxy
-   echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
-   mv kwrt-packages/luci-app-homeproxy ./
-   mv kwrt-packages/sing-box ./
-
-   # echo openclash
-   # echo "CONFIG_PACKAGE_luci-app-openclash=y" >> ../../.config
-   # mv kwrt-packages/luci-app-openclash ./
-
-   # echo mihomo
-   # echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
-   # mv kwrt-packages/mihomo ./
-   # mv kwrt-packages/luci-app-mihomo ./
+   # echo homeproxy
+   # echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> ../../.config
+   # mv kwrt-packages/luci-app-homeproxy ./
+   # mv kwrt-packages/sing-box ./
+   # mv kwrt-packages/luci-app-chinadns-ng ./
+   # mv kwrt-packages/chinadns-ng ./
+   
+   echo mihomo
+   echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
+   mv kwrt-packages/mihomo ./
+   mv kwrt-packages/luci-app-mihomo ./
 
    # echo netdata
    # echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../../.config
