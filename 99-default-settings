@@ -71,6 +71,8 @@ fi
 if [[ $(uci -q show AdGuardHome | wc -l)>0 ]]; then
   uci -q set AdGuardHome.AdGuardHome.enabled='1'
   uci commit AdGuardHome
+  chmod 0700 /etc/AdGuardHome
+  chmod 0700 /etc/AdGuardHome/data
 fi
 
 rm -rf /tmp/luci-*
