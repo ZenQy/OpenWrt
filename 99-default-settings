@@ -2,6 +2,7 @@
 
 uci -q set luci.main.lang='zh_cn'
 uci -q set luci.main.mediaurlbase=/luci-static/argon
+uci -1 set luci.sauth.sessiontime='86400'
 uci commit luci
 
 uci -q set dropbear.@dropbear[0].Interface='lan'
