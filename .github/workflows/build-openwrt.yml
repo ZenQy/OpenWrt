@@ -5,12 +5,12 @@ on:
     inputs:
       debug_enabled:
         type: boolean
-        description: 'Run the build with tmate debugging enabled'
+        description: "Run the build with tmate debugging enabled"
         required: false
         default: false
       add_plugin:
         type: boolean
-        description: 'Build with some plugins'
+        description: "Build with some plugins"
         required: false
         default: true
   schedule:
@@ -27,179 +27,178 @@ env:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
-    
+
     steps:
+      - name: Delete older workflow runs and artifacts
+        if: success()
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.RELEASES_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 3
+          keep_minimum_runs: 3
 
-    - name: Delete older workflow runs and artifacts
-      if: success()
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-        token: ${{ secrets.RELEASES_TOKEN }}
-        repository: ${{ github.repository }}
-        retain_days: 3
-        keep_minimum_runs: 3
+      - name: Checkout
+        uses: actions/checkout@main
 
-    - name: Checkout
-      uses: actions/checkout@main
+      - name: Check Server Performance
+        run: |
+          echo "警告⚠"
+          echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
+          echo -e "已知CPU型号（降序）：8370C，8272CL，8171M，E5-2673 \n"
+          echo "--------------------------CPU信息--------------------------"
+          echo "CPU物理数量：$(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
+          echo -e "CPU核心信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
+          echo "--------------------------内存信息--------------------------"
+          echo "已安装内存详细信息："
+          echo -e "$(sudo lshw -short -C memory | grep GiB) \n"
+          echo "--------------------------硬盘信息--------------------------"
+          echo "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
-    - name: Check Server Performance
-      run: |
-        echo "警告⚠"
-        echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
-        echo -e "已知CPU型号（降序）：8370C，8272CL，8171M，E5-2673 \n"
-        echo "--------------------------CPU信息--------------------------"
-        echo "CPU物理数量：$(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
-        echo -e "CPU核心信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
-        echo "--------------------------内存信息--------------------------"
-        echo "已安装内存详细信息："
-        echo -e "$(sudo lshw -short -C memory | grep GiB) \n"
-        echo "--------------------------硬盘信息--------------------------"
-        echo "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
+      - name: Initialization Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /etc/mysql /usr/local/lib/android /opt/ghc
+          sudo -E apt -y update
+          sudo -E apt -y install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget fuse libfuse-dev
+          sudo -E apt -y autoremove --purge
+          sudo -E apt -y clean
+          sudo timedatectl set-timezone "$TZ"
 
-    - name: Initialization Environment
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /etc/mysql /usr/local/lib/android /opt/ghc
-        sudo -E apt -y update
-        sudo -E apt -y install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget fuse libfuse-dev
-        sudo -E apt -y autoremove --purge
-        sudo -E apt -y clean
-        sudo timedatectl set-timezone "$TZ"
+      - name: Clone Source Code
+        run: |
+          df -hT $GITHUB_WORKSPACE
+          mkdir upload
+          echo "UPLOAD_PATH=$GITHUB_WORKSPACE/upload" >> $GITHUB_ENV
+          git clone --depth=1 -b $REPO_BRANCH $REPO_URL openwrt
+          cd openwrt
+          echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+          KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
+          echo "KERNEL_VERSION_NAME=$KERNEL_VERSION_NAME" >> $GITHUB_ENV
 
-    - name: Clone Source Code
-      run: |
-        df -hT $GITHUB_WORKSPACE
-        mkdir upload
-        echo "UPLOAD_PATH=$GITHUB_WORKSPACE/upload" >> $GITHUB_ENV
-        git clone --depth=1 -b $REPO_BRANCH $REPO_URL openwrt
-        cd openwrt
-        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
-        KERNEL_VERSION_NAME=$(curl -fsSL https://api.github.com/repos/ophub/kernel/releases/tags/kernel_stable | grep name | awk 'END{print}' | awk -F '"' '{print $4}' | awk -F '.tar.gz' '{print $1}')
-        echo "KERNEL_VERSION_NAME=$KERNEL_VERSION_NAME" >> $GITHUB_ENV
+      - name: Cache
+        uses: stupidloud/cachewrtbuild@main
+        with:
+          ccache: "true"
+          prefix: ${{ github.workspace }}/openwrt
 
-    - name: Cache
-      uses: stupidloud/cachewrtbuild@main
-      with:
-        ccache: 'true'
-        prefix: ${{ github.workspace }}/openwrt
+      - name: Install Feeds
+        run: |
+          cd $OPENWRT_PATH
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
 
-    - name: Install Feeds
-      run: |
-        cd $OPENWRT_PATH
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
+      - name: Setup Plugin Tag
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.add_plugin }}
+        run: |
+          echo "ADD_PLUGIN=true" >> $GITHUB_ENV
 
-    - name: Setup Plugin Tag
-      if: ${{ github.event_name != 'workflow_dispatch' || inputs.add_plugin }}
-      run: |
-        echo "ADD_PLUGIN=true" >> $GITHUB_ENV
+      - name: Load Custom Configuration
+        run: |
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
+          chmod +x $DIY_SCRIPT
+          cd $OPENWRT_PATH
+          $GITHUB_WORKSPACE/$DIY_SCRIPT
 
-    - name: Load Custom Configuration
-      run: |
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
-        chmod +x $DIY_SCRIPT
-        cd $OPENWRT_PATH
-        $GITHUB_WORKSPACE/$DIY_SCRIPT
+      - name: Download DL Package
+        run: |
+          cd $OPENWRT_PATH
+          make defconfig
+          make download -j8
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
 
-    - name: Download DL Package
-      run: |
-        cd $OPENWRT_PATH
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+      - name: Generate Variables
+        run: |
+          cd $OPENWRT_PATH
+          DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
+          echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
+          DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
+          echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
 
-    - name: Generate Variables
-      run: |
-        cd $OPENWRT_PATH
-        DEVICE_TARGET=$(cat .config | grep CONFIG_TARGET_BOARD | awk -F '"' '{print $2}')
-        echo "DEVICE_TARGET=$DEVICE_TARGET" >> $GITHUB_ENV
-        DEVICE_SUBTARGET=$(cat .config | grep CONFIG_TARGET_SUBTARGET | awk -F '"' '{print $2}')
-        echo "DEVICE_SUBTARGET=$DEVICE_SUBTARGET" >> $GITHUB_ENV
+      - name: Generate Firmware
+        run: |
+          cd $OPENWRT_PATH
+          mkdir -p files/etc/uci-defaults
+          cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
+          make -j$(nproc) || make -j1 || make -j1 V=s
 
-    - name: Generate Firmware
-      run: |
-        cd $OPENWRT_PATH
-        mkdir -p files/etc/uci-defaults
-        cp $GITHUB_WORKSPACE/$INIT_FILE files/etc/uci-defaults
-        make -j$(nproc) || make -j1 || make -j1 V=s
+      - name: Check Space Usage
+        if: always()
+        run: |
+          df -hT
+          echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
 
-    - name: Check Space Usage
-      if: always()
-      run: |
-        df -hT
-        echo "TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
-        echo "DATE=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
+      - name: Organize Files
+        if: success()
+        run: |
+          cd $OPENWRT_PATH/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET
+          cat sha256sums
+          ROOTFS_PATH=openwrt/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/openwrt-$DEVICE_TARGET-$DEVICE_SUBTARGET-rootfs.tar.gz
+          echo "ROOTFS_PATH=$ROOTFS_PATH" >> $GITHUB_ENV
+          cp $OPENWRT_PATH/.config $UPLOAD_PATH/build.config
 
-    - name: Organize Files
-      if: success()
-      run: |
-        cd $OPENWRT_PATH/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET
-        cat sha256sums
-        ROOTFS_PATH=openwrt/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET/openwrt-$DEVICE_TARGET-$DEVICE_SUBTARGET-rootfs.tar.gz
-        echo "ROOTFS_PATH=$ROOTFS_PATH" >> $GITHUB_ENV
-        cp $OPENWRT_PATH/.config $UPLOAD_PATH/build.config
+      - name: Package OpenWrt Firmware
+        if: success()
+        env:
+          OPENWRT_ARMVIRT: ${{ env.ROOTFS_PATH }}
+          KERNEL_REPO_URL: ophub/kernel
+          KERNEL_VERSION_NAME: ${{ env.KERNEL_VERSION_NAME }}
+          KERNEL_AUTO_LATEST: true
+          PACKAGE_SOC: s905x3_s905d
+          WHOAMI: Zenith
+          DISTRIB_REVISION: R${{ env.DATE }} by Zenith
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          wget https://raw.githubusercontent.com/unifreq/openwrt_packit/master/openwrt_flippy.sh
+          chmod +x openwrt_flippy.sh
+          sed -i "22asource $PACKIT_SCRIPT" openwrt_flippy.sh
+          sed -i '/git clone/a\    cd ${SELECT_PACKITPATH}\n    modify_packit\n    cd ..' openwrt_flippy.sh
+          ./openwrt_flippy.sh
 
-    - name: Package OpenWrt Firmware
-      if: success()
-      env:
-        OPENWRT_ARMVIRT: ${{ env.ROOTFS_PATH }}
-        KERNEL_REPO_URL: ophub/kernel
-        KERNEL_VERSION_NAME: ${{ env.KERNEL_VERSION_NAME }}
-        KERNEL_AUTO_LATEST: true
-        PACKAGE_SOC: s905x3_s905d
-        WHOAMI: Zenith
-        DISTRIB_REVISION: R${{ env.DATE }} by Zenith
-        GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
-      run: |
-        wget https://raw.githubusercontent.com/unifreq/openwrt_packit/master/openwrt_flippy.sh
-        chmod +x openwrt_flippy.sh
-        sed -i "22asource $PACKIT_SCRIPT" openwrt_flippy.sh
-        sed -i '/git clone/a\    cd ${SELECT_PACKITPATH}\n    modify_packit\n    cd ..' openwrt_flippy.sh
-        ./openwrt_flippy.sh
+      - name: Upload OpenWrt To Release
+        if: env.PACKAGED_STATUS == 'success'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          removeArtifacts: true
+          tag: v${{ env.DATE }}
+          token: ${{ secrets.RELEASES_TOKEN }}
+          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*,${{ env.UPLOAD_PATH }}/*
+          body: |
+            默认IP：10.0.0.10 默认密码： password
 
-    - name: Upload OpenWrt To Release
-      if: env.PACKAGED_STATUS == 'success'
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        removeArtifacts: true
-        tag: v${{ env.DATE }}
-        token: ${{ secrets.RELEASES_TOKEN }}
-        artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*,${{ env.UPLOAD_PATH }}/*
-        body: |
-          默认IP：10.0.0.5 默认密码： password
+            全新刷入emmc方法：
+            固件刷入U盘。
+            openwrt-install-amlogic
+            拔掉U盘，断电重启。
 
-          全新刷入emmc方法：
-          固件刷入U盘。
-          openwrt-install-amlogic
-          拔掉U盘，断电重启。
+            在线升级方法：
+            上传 img 到/mnt/mmcblk2p4
+            openwrt-update-amlogic
 
-          在线升级方法：
-          上传 img 到/mnt/mmcblk2p4
-          openwrt-update-amlogic
-        
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.3.4
-      if: success()
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.3.4
+        if: success()
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
 
-    - name: Telegram notification
-      if: always()
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          本次打包于${{ env.TIME }}结束！
+      - name: Telegram notification
+        if: always()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            本次打包于${{ env.TIME }}结束！

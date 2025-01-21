@@ -3,7 +3,7 @@
 # 修改机器名称
 # sed -i 's/OpenWrt/Phicomm-N1/g' package/base-files/files/bin/config_generate
 # 修改默认IP
-sed -i 's/192.168.1.1/10.0.0.5/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/10.0.0.10/g' package/base-files/files/bin/config_generate
 # 修改时区
 sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 # 替换默认主题,并移除其他主题依赖
@@ -28,7 +28,7 @@ if [ $ADD_PLUGIN ]; then
    mv kwrt-packages/sing-box ./
    mv kwrt-packages/luci-app-chinadns-ng ./
    mv kwrt-packages/chinadns-ng ./
-   
+
    # echo mihomo
    # echo "CONFIG_PACKAGE_luci-app-mihomo=y" >> ../../.config
    # mv kwrt-packages/mihomo ./

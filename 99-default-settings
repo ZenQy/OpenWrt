@@ -12,7 +12,7 @@ uci -q del network.lan
 uci -q set network.lan='interface'
 uci -q set network.lan.device='eth0'
 uci -q set network.lan.proto='static'
-uci -q set network.lan.ipaddr='10.0.0.5'
+uci -q set network.lan.ipaddr='10.0.0.10'
 uci -q set network.lan.netmask='255.255.255.0'
 uci -q set network.lan.gateway='10.0.0.1'
 uci -q set network.lan.delegate='0'
@@ -43,7 +43,7 @@ fi
 if [[ $(uci -q show transmission | wc -l)>0 ]]; then
   uci -q set transmission.@transmission[0].enabled='1'
   uci -q set transmission.@transmission[0].user='root'
-  uci -q set transmission.@transmission[0].group='root' 
+  uci -q set transmission.@transmission[0].group='root'
   uci -q set transmission.@transmission[0].download_dir='/mnt/mmcblk2p4/transmission'
   uci -q set transmission.@transmission[0].cache_size_mb='500'
   uci -q set transmission.@transmission[0].encryption='0'
